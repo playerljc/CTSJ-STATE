@@ -1,0 +1,37 @@
+{
+  "name": "@ctsj/state",
+  "version": "1.0.0",
+  "description": "一个简单的状态集管理",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "buildpackage": "ctbuild --type buildpackage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/playerljc/CTSJ-STATE.git"
+  },
+  "author": "playerljc <playerljc@163.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/playerljc/CTSJ-STATE/issues"
+  },
+  "files":[
+    "lib"
+  ],
+  "homepage": "https://github.com/playerljc/CTSJ-STATE#readme",
+  "devDependencies": {
+    "babel-eslint": "^8.1.2",
+    "eslint": "^4.14.0",
+    "eslint-config-airbnb": "^16.0.0",
+    "eslint-plugin-babel": "^4.0.0",
+    "eslint-plugin-compat": "^2.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-markdown": "^1.0.0-beta.6",
+    "eslint-plugin-react": "^7.0.1",
+    "@ctsj/build": "^1.0.7",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}

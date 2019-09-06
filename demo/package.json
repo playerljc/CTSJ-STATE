@@ -1,0 +1,48 @@
+{
+  "name": "ctsj-state-demo",
+  "version": "1.0.0",
+  "description": "ctsj-state-demo",
+  "main": "src/back/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "startapp": "ctbuild --type startapp",
+    "buildapp": "ctbuild --type buildapp",
+    "link": "npm link @ctsj/state"
+  },
+  "author": "playerljc <playerljc@163.com>",
+  "license": "MIT",
+  "keywords": [
+    "CTSJ-UI",
+    "CtMobile",
+    "CtSJ-STATE",
+    "PC",
+    "webapp",
+    "SPA",
+    "Hybrid",
+    "Cordova",
+    "Android",
+    "iOS",
+    "Material",
+    "playerljc",
+    "WebFramework"
+  ],
+  "devDependencies": {
+    "babel-eslint": "^8.1.2",
+    "eslint": "^4.14.0",
+    "eslint-config-airbnb": "^16.0.0",
+    "eslint-plugin-babel": "^4.0.0",
+    "eslint-plugin-compat": "^2.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-markdown": "^1.0.0-beta.6",
+    "eslint-plugin-react": "^7.0.1",
+    "@babel/runtime": "^7.5.5",
+    "@ctsj/build": "^1.0.7",
+    "axios": "^0.19.0",
+    "font-awesome": "^4.7.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "uuid": "^3.3.3"
+  }
+}

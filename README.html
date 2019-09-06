@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head lang=en>
+  <meta charset=utf-8>
+  <meta name=viewport
+        content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
+  <title></title>
+</head>
+
+<body>
+<h1>CTSJ-STATE</h1>
+<h3>一个简单的状态集管理</h3>
+<h4>把redux和react-redux结合起来的一个简版状态集</h4>
+<ul>
+  <li>
+    <a href="#state">状态集本身</a>
+    <ul>
+      <li><a href="#createStore">createStore</a></li>
+      <li><a href="#combineReducers">combineReducers</a></li>
+      <li><a href="#Store">Store</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href="#reactuse">React中使用</a>
+    <ul>
+      <li><a href="#Provider">Provider</a></li>
+      <li><a href="#connect">connect</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href="#toDoList">ToDoList的demo</a>
+  </li>
+</ul>
+
+
+<h3 id="state">状态集本身</h3>
+
+<div id="createStore">
+  <h4>.createStore</h4>
+  <div>说明：</div>
+  <ul>
+    <li>createStore(reducer,preloadedState)</li>
+    <ul>
+      <li>reducer-和redux的reducer一致</li>
+      <li>preloadedState-Store的初始化值</li>
+    </ul>
+  </ul>
+
+  <div>例子：</div>
+  <pre>
+<code>
+import { createStore } from '@ctsj/state/lib/state';
+
+function reducer(state,action) {
+  const {data = []} = state;
+  const { type } = action;
+  switch (type) {
+    case 'add':
+      data.push({id:1});
+      break;
+    default:
+      break;
+  }
+  return state;
+}
+
+const store = createStore(reducer, {a:1,b:2});
+</code>
+</pre>
+</div>
+
+<div id="combineReducers">
+  <h4>.combineReducers</h4>
+  <div>说明：</div>
+  <ul>
+    <li>reducers- Object</li>
+  </ul>
+
+  <div>例子：</div>
+  <pre>
+<code>
+reducer.jsx
+
+import uuid from 'uuid/v1';
+
+/**
+ * addTodo
+ * @param {Object} - state
+ * @param {Object} - action
+ * @return {Array}
+ */
+export function addTodo(state, action) {
+  const { type, value } = action;
+  const { data = [] } = state;
+
+  switch (type) {
+    case 'add':
+      data.push({
+        id: uuid(),
+        value,
+        type: 'run', // completed
+      });
+      break;
+    default:
+      break;
+  }
+  return state;
+}
+
+/**
+ * updateTodo
+ * @param {Object} - state
+ * @param {Object} - action
+ * @return {Object|Array}
+ */
+export function updateTodo(state, action) {
+  const { data = [] } = state;
+  const { id, value, type } = action;
+  switch (type) {
+    case 'update':
+      const index = data.findIndex(t => t.id === id);
+      if (index !== -1) {
+        data[index].value = value;
+      }
+      break;
+    default:
+      break;
+  }
+  return state;
+}
+
+/**
+ * completeTodo
+ * @param {Object} - state
+ * @param {Object} - action
+ * @return {Array}
+ */
+export function completeTodo(state, action) {
+  const { data = [] } = state;
+  const { id, type } = action;
+  switch (type) {
+    case 'complete':
+      const index = data.findIndex(t => t.id === id);
+      if (index !== -1) {
+        data[index].type = 'complete';
+      }
+      break;
+    default:
+      break;
+  }
+  return state;
+}
+
+/**
+ * deleteTodo
+ * @param {Object} - state
+ * @param {Object} - action
+ * @return {Object|Array}
+ */
+export function deleteTodo(state, action) {
+  const { data = [] } = state;
+  const { id } = action;
+  switch (action.type) {
+    case 'delete':
+      const index = data.findIndex(t => t.id === id);
+      if (index !== -1) {
+        data.splice(index, 1);
+      }
+      break;
+    default:
+      break;
+  }
+  return state;
+}
+
+index.jsx
+
+import { createStore, combineReducers } from '@ctsj/state/lib/state';
+import {addTodo, updateTodo, completeTodo, deleteTodo} from './reducer';
+
+const reducer = combineReducers({
+  addTodo, updateTodo, completeTodo, deleteTodo,
+});
+
+const store = createStore(reducer, {
+  data: [],
+});
+</code>
+</pre>
+</div>
+
+<div id="Store">
+  <h4>.Store</h4>
+  <div>方法：</div>
+  <ul>
+    <li>getStatus - 返回state</li>
+    <li>subscribe - 监听state的数据变化,返回值是注销监听句柄</li>
+    <li>dispatch - action 发送数据改变</li>
+  </ul>
+</div>
+
+<h3 id="reactuse">React中使用</h3>
+
+<div id="Provider">
+  <h4>.Provider</h4>
+  <div>props：</div>
+  <ul>
+    <li>store - Store</li>
+  </ul>
+
+  <div>例子：</div>
+  <pre>
+<code>
+import { Provider } from '@ctsj/state/lib/react';
+ReactDOM.render(
+  (
+    &lt;Provider store={store}&gt;
+      &lt;App /&gt;
+    &lt;/Provider&gt;
+  ),
+  document.getElementById('app')
+);
+</code>
+</pre>
+</div>
+
+<div id="connect">
+  <h4>.Provider</h4>
+  <div>说明：</div>
+  <ul>
+    <li>mapStateToProps - 处理state到props的合并</li>
+    <li>mapDispatchToProps - 用dispatch处理数据改变</li>
+    <li>React组件</li>
+    <li>Callback - 渲染完成会后的回调函数</li>
+  </ul>
+
+  <div>例子：</div>
+<pre>
+<code>
+import React from 'react';
+import { connect } from '@ctsj/state/lib/react';
+import Immutable from '@ctsj/state/lib/util/immutable';
+
+import './header.less';
+
+const selectorPrefix = 'ctsj-state-todolist';
+
+/**
+ * Header
+ * @param onAdd
+ * @return {*}
+ * @constructor
+ */
+function Header({ onAdd }) {
+  return (
+    &lt;div className="header"&gt;
+      &lt;div className="title"&gt;ToDoList&lt;/div&gt;
+      &lt;div className="input"&gt;
+        &lt;input
+            placeholder="添加ToDo"
+            type="text"
+            onKeyUp={(e) =&gt; {
+              const { which, target: { value } } = e;
+              if (which === 13) {
+                onAdd(value);
+              }
+            }}
+        /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}
+
+const mapStateToProps = (state) => {
+  return Immutable.cloneDeep(state);
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onAdd: (value) => {
+      dispatch({
+        type: 'add',
+        value,
+      });
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
+
+</code>
+</pre>
+</div>
+
+
+<div id="toDoList">
+  <h3>.ToDoList</h3>
+  进入demo目录
+<pre>
+<code>
+npm install
+npm run startapp
+浏览器输入localhost:8000
+</code>
+</pre>
+</div>
+
+</body>
+
+</html>
