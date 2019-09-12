@@ -5,8 +5,8 @@
   "main": "src/back/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "startapp": "ctbuild --type startapp",
-    "buildapp": "ctbuild --type buildapp"
+    "startapp": "ctbuild startapp",
+    "buildapp": "ctbuild buildapp"
   },
   "author": "playerljc <playerljc@163.com>",
   "license": "MIT",
