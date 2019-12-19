@@ -40,6 +40,14 @@ export default (mapStateToProps, mapDispatchToProps) => {
         this.unsubscribe();
       }
 
+      /**
+       * getInstance
+       * @return {ReactElement}
+       */
+      getInstance() {
+        return this.ins;
+      }
+
       render() {
         return (
           <ProviderContext.Consumer>{({ store }) => {
@@ -56,7 +64,14 @@ export default (mapStateToProps, mapDispatchToProps) => {
               props = mapStateToProps(Immutable.cloneDeep(state));
             }
 
-            return (<Component {...props} {...this.props} {...dispatch} />);
+            return (
+              <Component
+                ref={ins => this.ins = ins}
+                {...props}
+                {...this.props}
+                {...dispatch}
+              />
+            );
           }}
           </ProviderContext.Consumer>
         );
