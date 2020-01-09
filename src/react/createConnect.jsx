@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import Immutable from '../util/immutable';
-import { ProviderContext } from './Context';
 
 /**
  * createConnect
@@ -15,7 +16,8 @@ export default (mapStateToProps, mapDispatchToProps) => {
    * @param {Func} - Callback
    */
   return (Component, Callback) => {
-    return class extends React.Component {
+
+    class WrapClass extends React.Component {
       constructor(props) {
         super(props);
         this.state = {
@@ -24,8 +26,8 @@ export default (mapStateToProps, mapDispatchToProps) => {
       }
 
       componentDidMount() {
-        this.unsubscribe = this.store.subscribe(() => {
-          const state = this.store.getState();
+        this.unsubscribe = this.context.store.subscribe(() => {
+          const state = this.context.store.getState();
           this.setState({
             state,
           }, () => {
@@ -49,33 +51,35 @@ export default (mapStateToProps, mapDispatchToProps) => {
       }
 
       render() {
+        const {store} = this.context;
+
+        const state = store.getState();
+
+        let dispatch = {};
+        if (mapDispatchToProps) {
+          dispatch = mapDispatchToProps(store.dispatch.bind(store));
+        }
+
+        let props = {};
+        if (mapStateToProps) {
+          props = mapStateToProps(Immutable.cloneDeep(state));
+        }
+
         return (
-          <ProviderContext.Consumer>{({ store }) => {
-            if (!this.store) this.store = store;
-            const state = this.state.state ? this.state.state : this.store.getState();
-
-            let dispatch = {};
-            if (mapDispatchToProps) {
-              dispatch = mapDispatchToProps(this.store.dispatch.bind(this.store));
-            }
-
-            let props = {};
-            if (mapStateToProps) {
-              props = mapStateToProps(Immutable.cloneDeep(state));
-            }
-
-            return (
-              <Component
-                ref={ins => this.ins = ins}
-                {...props}
-                {...this.props}
-                {...dispatch}
-              />
-            );
-          }}
-          </ProviderContext.Consumer>
+          <Component
+            ref={ins => this.ins = ins}
+            {...props}
+            {...this.props}
+            {...dispatch}
+          />
         );
       }
+    }
+
+    WrapClass.contextTypes = {
+      store: PropTypes.object,
     };
+
+    return WrapClass;
   };
 };

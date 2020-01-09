@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ProviderContext } from './Context';
 
 /**
  * Provider
@@ -8,18 +7,24 @@ import { ProviderContext } from './Context';
  * @classdesc Provider
  */
 class Provider extends React.Component {
+  getChildContext() {
+    return {
+      store: this.props.store,
+    };
+  }
+
   render() {
     const { children } = this.props;
-    return (
-      <ProviderContext.Provider value={this.props}>
-        {children}
-      </ProviderContext.Provider>
-    );
+    return children;
   }
 }
 
 Provider.propTypes = {
   store: PropTypes.object,
+};
+
+Provider.childContextTypes = {
+  store: PropTypes.object
 };
 
 export default Provider;
