@@ -24,13 +24,16 @@ export default (mapStateToProps, mapDispatchToProps) => {
       }
 
       componentDidMount() {
-        this.unsubscribe = this.store.subscribe(() => {
+        this.unsubscribe = this.store.subscribe((action) => {
           const state = this.store.getState();
           this.setState({
             state,
           }, () => {
             if (Callback) {
-              Callback();
+              Callback({
+                ins: this.ins,
+                action,
+              });
             }
           });
         });
