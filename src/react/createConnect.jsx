@@ -16,7 +16,6 @@ export default (mapStateToProps, mapDispatchToProps) => {
    * @param {Func} - Callback
    */
   return (Component, Callback) => {
-
     class WrapClass extends React.Component {
       constructor(props) {
         super(props);
@@ -26,13 +25,16 @@ export default (mapStateToProps, mapDispatchToProps) => {
       }
 
       componentDidMount() {
-        this.unsubscribe = this.context.store.subscribe(() => {
+        this.unsubscribe = this.context.store.subscribe((action) => {
           const state = this.context.store.getState();
           this.setState({
             state,
           }, () => {
             if (Callback) {
-              Callback();
+              Callback({
+                ins: this.ins,
+                action,
+              });
             }
           });
         });
@@ -51,7 +53,7 @@ export default (mapStateToProps, mapDispatchToProps) => {
       }
 
       render() {
-        const {store} = this.context;
+        const { store } = this.context;
 
         const state = store.getState();
 

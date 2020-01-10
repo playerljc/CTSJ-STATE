@@ -4,10 +4,10 @@ import Immutable from '../util/immutable';
  * trigger
  * @access private
  */
-function trigger() {
+function trigger(action) {
   const { listeners } = this;
   listeners.forEach((ins) => {
-    ins();
+    ins(action);
   });
 }
 
@@ -46,7 +46,7 @@ class Store {
     } else {
       const state = this.reducer(Immutable.cloneDeep(this.state), action);
       this.state = Immutable.cloneDeep(state);
-      trigger.call(this);
+      trigger.call(this, action);
     }
   }
 
