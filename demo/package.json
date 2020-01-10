@@ -44,6 +44,6 @@
     "prop-types": "15.5.10",
     "react": "15.6.1",
     "react-dom": "15.6.1",
-    "@ctsj/state": "1.0.2"
+    "@ctsj/state": "1.0.4"
   }
 }
