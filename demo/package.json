@@ -1,6 +1,6 @@
 {
   "name": "ctsj-state-demo",
-  "version": "1.0.7",
+  "version": "1.0.0",
   "description": "ctsj-state-demo",
   "main": "src/back/index.js",
   "scripts": {
