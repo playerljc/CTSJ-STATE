@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/state",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "一个简单的状态集管理",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
