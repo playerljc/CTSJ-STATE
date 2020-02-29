@@ -3,15 +3,15 @@
  * @param {Object} - reducers
  * @return {Function}
  */
-export default (reducers) => {
+export default (reducers: any) => {
   /** Reducer
-   *  @param {Object} - state
-   *  @param {Object} - action
-   *  @return {Function}
-   */
-  return (state, action) => {
+     *  @param {Object} - state
+     *  @param {Object} - action
+     *  @return {Function}
+     */
+  return (state: any, action: any) => {
     let data = state;
-    for (const p in reducers) {
+    for (const p: string in reducers) {
       if (!Object.hasOwnProperty(p)) {
         data = reducers[p](data, action);
       }

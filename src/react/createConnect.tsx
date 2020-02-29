@@ -8,14 +8,20 @@ import { ProviderContext } from './Context';
  * @param {Function} - mapDispatchToProps
  * @return {HOC}
  */
-export default (mapStateToProps, mapDispatchToProps) => {
+export default (mapStateToProps: any, mapDispatchToProps: any) => {
   /**
    * ConnectHOC
    * @param {ReactElement} - Component
    */
-  return (Component) => {
+  return (Component: React.Component) => {
     return class extends React.Component {
-      constructor(props) {
+      state: { state: any; };
+      unsubscribe: any;
+      store: any;
+      ins: any;
+      props: any;
+
+      constructor(props: any) {
         super(props);
         this.state = {
           state: null,
@@ -23,7 +29,7 @@ export default (mapStateToProps, mapDispatchToProps) => {
       }
 
       componentDidMount() {
-        this.unsubscribe = this.store.subscribe((action) => {
+        this.unsubscribe = this.store.subscribe((action: any) => {
           const state = this.store.getState();
           this.setState({
             state,

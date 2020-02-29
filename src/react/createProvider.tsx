@@ -8,6 +8,9 @@ import { ProviderContext } from './Context';
  * @classdesc Provider
  */
 class Provider extends React.Component {
+  static propTypes: { store: any; };
+  props: { children: any; };
+
   render() {
     const { children } = this.props;
     return (
