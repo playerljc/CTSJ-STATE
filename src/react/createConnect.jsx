@@ -73,7 +73,9 @@ export default (mapStateToProps, mapDispatchToProps) => {
 
         return (
           <Component
-            ref={ins => this.ins = ins}
+            ref={(ins) => {
+              this.ins = ins;
+            }}
             {...props}
             {...this.props}
             {...dispatch}
