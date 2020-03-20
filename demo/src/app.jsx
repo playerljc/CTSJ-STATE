@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from '@ctsj/state/lib/react';
-import Immutable from '@ctsj/state/lib/util/immutable';
 import Header from './header';
 import List from './list';
 
@@ -14,7 +13,7 @@ const selectorPrefix = 'ctsj-state-todolist';
  * @return {*}
  * @constructor
  */
-function App({ data }) {
+const App = ({ data }) => {
   return (
     <div className={`${selectorPrefix}`}>
       <Header />
@@ -24,10 +23,10 @@ function App({ data }) {
       </div>
     </div>
   );
-}
+};
 
 const mapStateToProps = (state) => {
-  return Immutable.cloneDeep(state);
+  return state;
 };
 
 /**

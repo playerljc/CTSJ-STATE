@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from '@ctsj/state/lib/react';
-import Immutable from '@ctsj/state/lib/util/immutable';
 
 import './listitem.less';
 
@@ -11,7 +10,7 @@ const selectorPrefix = 'ctsj-state-todolist-list-body-item';
  * @class ListItem
  * @classdesc ListItem
  */
-class ListItem extends React.Component {
+class ListItem extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -101,18 +100,22 @@ class ListItem extends React.Component {
   renderEditable() {
     const { editable = false, value } = this.state;
     return editable ?
-      (<div className={`${selectorPrefix}-inner-editorable`}>
-        <input
-          value={value}
-          onChange={this.onEditorChange}
-          onBlur={this.onEditorBlur}
-        />
-      </div>) :
-      (<div
-        className={`${selectorPrefix}-inner-value`}
-        onClick={this.onEditor}
-      >{value}
-      </div>);
+      (
+        <div className={`${selectorPrefix}-inner-editorable`}>
+          <input
+            value={value}
+            onChange={this.onEditorChange}
+            onBlur={this.onEditorBlur}
+          />
+        </div>
+      ) :
+      (
+        <div
+          className={`${selectorPrefix}-inner-value`}
+          onClick={this.onEditor}
+        >{value}
+        </div>
+      );
   }
 
   render() {
@@ -144,7 +147,7 @@ class ListItem extends React.Component {
  * @return {Object|Array}
  */
 const mapStateToProps = (state) => {
-  return Immutable.cloneDeep(state);
+  return state;
 };
 
 /**

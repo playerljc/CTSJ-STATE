@@ -68,7 +68,7 @@ export default (mapStateToProps, mapDispatchToProps) => {
 
         let props = {};
         if (mapStateToProps) {
-          props = mapStateToProps(Immutable.cloneDeep(state));
+          props = mapStateToProps(state);
         }
 
         return (
@@ -76,9 +76,10 @@ export default (mapStateToProps, mapDispatchToProps) => {
             ref={(ins) => {
               this.ins = ins;
             }}
-            {...props}
             {...this.props}
+            {...props}
             {...dispatch}
+            dispatch={store.dispatch}
           />
         );
       }

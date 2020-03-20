@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from '../util/immutable';
 import { ProviderContext } from './Context';
 
 /**
@@ -53,7 +52,7 @@ export default (mapStateToProps, mapDispatchToProps) => {
 
             let props = {};
             if (mapStateToProps) {
-              props = mapStateToProps(Immutable.cloneDeep(state));
+              props = mapStateToProps(state);
             }
 
             return (<Component {...props} {...this.props} {...dispatch} />);

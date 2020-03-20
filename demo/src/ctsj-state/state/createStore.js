@@ -1,5 +1,3 @@
-import Immutable from '../util/immutable';
-
 /**
  * trigger
  * @access private
@@ -33,7 +31,7 @@ class Store {
    * @return {Object}
    */
   getState() {
-    return Immutable.cloneDeep(this.state);
+    return this.state;
   }
 
   /**
@@ -44,8 +42,8 @@ class Store {
     if (action instanceof Function) {
       action(this.dispatch.bind(this));
     } else {
-      const state = this.reducer(Immutable.cloneDeep(this.state), action);
-      this.state = Immutable.cloneDeep(state);
+      const state = this.reducer(this.state, action);
+      this.state = state;
       trigger.call(this);
     }
   }
