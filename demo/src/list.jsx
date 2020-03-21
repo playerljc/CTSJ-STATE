@@ -11,9 +11,9 @@ const selectorPrefix = 'ctsj-state-todolist';
  * @class List
  * @classdesc List
  */
-class List extends React.Component {
+class List extends React.PureComponent {
   render() {
-    const { type, data = [] } = this.props;
+    const { type, data = []} = this.props;
     const curData = data.filter(t => t.type === type);
     const title = type === 'completed' ? '已完成' : '进行中';
 

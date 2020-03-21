@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from '@ctsj/state/lib/react';
-import Immutable from '@ctsj/state/lib/util/immutable';
 
 import './header.less';
 
@@ -12,7 +11,7 @@ const selectorPrefix = 'ctsj-state-todolist';
  * @return {*}
  * @constructor
  */
-function Header({ onAdd }) {
+const Header = React.memo(({ onAdd }) => {
   return (
     <div className={`${selectorPrefix}-header`}>
       <div className={`${selectorPrefix}-header-title`}>ToDoList</div>
@@ -30,10 +29,10 @@ function Header({ onAdd }) {
       </div>
     </div>
   );
-}
+});
 
 const mapStateToProps = (state) => {
-  return Immutable.cloneDeep(state);
+  return state;
 };
 
 const mapDispatchToProps = (dispatch) => {

@@ -8,7 +8,7 @@ import uuid from 'uuid/v1';
  */
 export function addTodo(state, action) {
   const { type, value } = action;
-  const { data = [] } = state;
+  const { data = []} = state;
 
   switch (type) {
     case 'add':
@@ -31,13 +31,15 @@ export function addTodo(state, action) {
  * @return {Object|Array}
  */
 export function updateTodo(state, action) {
-  const { data = [] } = state;
+  const { data = []} = state;
   const { id, value, type } = action;
   switch (type) {
     case 'update':
-      const index = data.findIndex(t => t.id === id);
-      if (index !== -1) {
-        data[index].value = value;
+      {
+        const index = data.findIndex(t => t.id === id);
+        if (index !== -1) {
+          data[index].value = value;
+        }
       }
       break;
     default:
@@ -53,13 +55,15 @@ export function updateTodo(state, action) {
  * @return {Array}
  */
 export function completeTodo(state, action) {
-  const { data = [] } = state;
+  const { data = []} = state;
   const { id, type } = action;
   switch (type) {
     case 'complete':
-      const index = data.findIndex(t => t.id === id);
-      if (index !== -1) {
-        data[index].type = 'complete';
+      {
+        const index = data.findIndex(t => t.id === id);
+        if (index !== -1) {
+          data[index].type = 'complete';
+        }
       }
       break;
     default:
@@ -75,13 +79,15 @@ export function completeTodo(state, action) {
  * @return {Object|Array}
  */
 export function deleteTodo(state, action) {
-  const { data = [] } = state;
+  const { data = []} = state;
   const { id } = action;
   switch (action.type) {
     case 'delete':
-      const index = data.findIndex(t => t.id === id);
-      if (index !== -1) {
-        data.splice(index, 1);
+      {
+        const index = data.findIndex(t => t.id === id);
+        if (index !== -1) {
+          data.splice(index, 1);
+        }
       }
       break;
     default:
