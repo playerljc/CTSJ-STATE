@@ -12,9 +12,8 @@ export default (mapStateToProps, mapDispatchToProps) => {
   /**
    * ConnectHOC
    * @param {ReactElement} - Component
-   * @param {Func} - Callback
    */
-  return (Component, Callback) => {
+  return (Component) => {
     return class extends React.Component {
       constructor(props) {
         super(props);
@@ -24,13 +23,21 @@ export default (mapStateToProps, mapDispatchToProps) => {
       }
 
       componentDidMount() {
-        this.unsubscribe = this.store.subscribe(() => {
+        this.unsubscribe = this.store.subscribe((action) => {
           const state = this.store.getState();
           this.setState({
             state,
           }, () => {
-            if (Callback) {
-              Callback();
+            // 如果是当前实力进行的数据更改才会调用success
+            const { success, ins, ...other } = action;
+            // console.log('redux进行了数据改变的通知');
+            // console.log(action);
+            // console.log(this.ins);
+            // console.log(this.ins === ins);
+            if (success && ins) {
+              if (this.ins === ins) {
+                success.call(ins, Immutable.cloneDeep(other));
+              }
             }
           });
         });
@@ -38,6 +45,14 @@ export default (mapStateToProps, mapDispatchToProps) => {
 
       componentWillUnmount() {
         this.unsubscribe();
+      }
+
+      /**
+       * getInstance
+       * @return {ReactElement}
+       */
+      getInstance() {
+        return this.ins;
       }
 
       render() {
@@ -53,10 +68,20 @@ export default (mapStateToProps, mapDispatchToProps) => {
 
             let props = {};
             if (mapStateToProps) {
-              props = mapStateToProps(Immutable.cloneDeep(state));
+              props = mapStateToProps(state);
             }
 
-            return (<Component {...props} {...this.props} {...dispatch} />);
+            return (
+              <Component
+                ref={ins => {
+                  this.ins = ins;
+                }}
+                {...this.props}
+                {...props}
+                {...dispatch}
+                dispatch={store.dispatch}
+              />
+            );
           }}
           </ProviderContext.Consumer>
         );

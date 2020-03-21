@@ -1,13 +1,11 @@
-import Immutable from '../util/immutable';
-
 /**
  * trigger
  * @access private
  */
-function trigger() {
+function trigger(action) {
   const { listeners } = this;
   listeners.forEach((ins) => {
-    ins();
+    ins(action);
   });
 }
 
@@ -33,7 +31,7 @@ class Store {
    * @return {Object}
    */
   getState() {
-    return Immutable.cloneDeep(this.state);
+    return this.state;
   }
 
   /**
@@ -44,9 +42,9 @@ class Store {
     if (action instanceof Function) {
       action(this.dispatch.bind(this));
     } else {
-      const state = this.reducer(Immutable.cloneDeep(this.state), action);
-      this.state = Immutable.cloneDeep(state);
-      trigger.call(this);
+      const state = this.reducer(this.state, action);
+      this.state = state;
+      trigger.call(this, action);
     }
   }
 

@@ -18,6 +18,10 @@ class Provider extends React.Component {
   }
 }
 
+Provider.defaultProps = {
+  store: {},
+};
+
 Provider.propTypes = {
   store: PropTypes.object,
 };
