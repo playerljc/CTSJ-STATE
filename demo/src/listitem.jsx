@@ -38,9 +38,9 @@ class ListItem extends React.PureComponent {
    * onDelete
    */
   onDelete() {
-    const { id, onDelete } = this.props;
-    if (onDelete) {
-      onDelete(id);
+    const { id, fetchDelete } = this.props;
+    if (fetchDelete) {
+      fetchDelete(id);
     }
   }
 
@@ -48,10 +48,10 @@ class ListItem extends React.PureComponent {
    * onComplete
    */
   onComplete() {
-    const { type, id, onComplete } = this.props;
+    const { type, id, fetchComplete } = this.props;
     if (type === 'run') {
-      if (onComplete) {
-        onComplete(id);
+      if (fetchComplete) {
+        fetchComplete(id);
       }
     }
   }
@@ -70,13 +70,13 @@ class ListItem extends React.PureComponent {
    * onEditorBlur
    */
   onEditorBlur() {
-    const { id, onUpdate } = this.props;
+    const { id, fetchUpdate } = this.props;
     const { value } = this.state;
     this.setState({
       editable: false,
     }, () => {
-      if (onUpdate) {
-        onUpdate({ id, value });
+      if (fetchUpdate) {
+        fetchUpdate(id, value);
       }
     });
   }
@@ -146,8 +146,8 @@ class ListItem extends React.PureComponent {
  * @param {Object} - state
  * @return {Object|Array}
  */
-const mapStateToProps = (state) => {
-  return state;
+const mapStateToProps = ({ todolist }) => {
+  return todolist;
 };
 
 /**
@@ -155,42 +155,11 @@ const mapStateToProps = (state) => {
  * @param {Function} - dispatch
  * @return {Object}
  */
-const mapDispatchToProps = (dispatch) => {
-  return {
-    /**
-     * onDelete
-     * @param {Number} - id
-     */
-    onDelete: (id) => {
-      dispatch({
-        type: 'delete',
-        id,
-      });
-    },
-    /**
-     * onComplete
-     * @param {Number} - id
-     */
-    onComplete(id) {
-      dispatch({
-        type: 'complete',
-        id,
-      });
-    },
-    /**
-     * onUpdate
-     * @param {Number} - id
-     * @param {Number} - value
-     */
-    onUpdate({ id, value }) {
-      dispatch({
-        type: 'update',
-        id,
-        value,
-      });
-    },
-  };
-};
+const mapDispatchToProps = dispatch => ({
+  fetchDelete: id => dispatch({ type: 'todolist/fetchDelete', id }),
+  fetchComplete: id => dispatch({ type: 'todolist/fetchComplete', id }),
+  fetchUpdate: (id, value) => dispatch({ type: 'todolist/fetchUpdate', id, value }),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListItem);
 

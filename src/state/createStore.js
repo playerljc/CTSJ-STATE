@@ -19,10 +19,12 @@ class Store {
    * constrcutor
    * @param {Function} - reducer
    * @param {Object | Array} - preloadedState
+   * @param {Array} - middlewares
    */
-  constructor(reducer, preloadedState = {}) {
+  constructor(reducer, preloadedState = {}, middlewares = []) {
     this.reducer = reducer;
     this.state = Object.assign({}, preloadedState);
+    this.middlewares = middlewares || [];
     this.listeners = [];
   }
 
@@ -42,8 +44,23 @@ class Store {
     if (action instanceof Function) {
       action(this.dispatch.bind(this));
     } else {
+      if (this.middlewares) {
+        for (let i = this.middlewares.length - 1; i >= 0; i--) {
+          const { before } = this.middlewares[i];
+          before(this.state, action);
+        }
+      }
+
       const state = this.reducer(this.state, action);
       this.state = state;
+
+      if (this.middlewares) {
+        for (let i = 0; i < this.middlewares.length; i++) {
+          const { after } = this.middlewares[i];
+          after(this.state, action);
+        }
+      }
+
       trigger.call(this, action);
     }
   }

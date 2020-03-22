@@ -1,13 +1,9 @@
 const path = require('path');
 
 module.exports = {
-  getConfig(config) {
-    return {
-      // resolve: {
-      //   alias: {
-      //     '@ctsj/state': path.resolve(__dirname, 'src/ctsj-state'),
-      //   },
-      // },
+  getConfig({ curModule }) {
+    curModule.resolve.alias = {
+      '@ctsj/state/lib': path.resolve(__dirname, 'src/ctsj-state'),
     };
   },
 };
