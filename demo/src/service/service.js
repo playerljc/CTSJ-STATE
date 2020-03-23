@@ -1,34 +1,17 @@
-import uuid from 'uuid/v1';
+import uuid from '_uuid@3.4.0@uuid/v1';
 
-function getStoreData() {
-  const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
-  return JSON.parse(storeData);
-}
-
-/**
- * fetchList
- * @return {Promise<any>}
- */
-export const fetchList = () => {
+export const list = () => {
   return new Promise(resolve => {
     const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
-    setTimeout(() => {
-      resolve({
-        code: 200,
-        data: JSON.parse(storeData),
-      });
-    }, 1000);
+    resolve({
+      code: 200,
+      list: JSON.parse(storeData),
+    });
   });
 };
 
-/**
- * fetchSave
- * @param params
- * @return {Promise<any>}
- */
-export const fetchSave = params => {
+export const save = (data, params) => {
   return new Promise(resolve => {
-    const data = getStoreData();
     data.push({
       id: uuid(),
       value: params.value,
@@ -37,75 +20,45 @@ export const fetchSave = params => {
     localStorage.setItem('ctsj-state-todolist', JSON.stringify(data));
     resolve({
       code: 200,
-      data: true,
     });
   });
 };
 
-/**
- * fetchUpdate
- * @param id
- * @param value
- * @return {Promise<any>}
- */
-export const fetchUpdate = ({ id, value }) => {
+export const update = (data, id, value) => {
   return new Promise(resolve => {
-    const data = getStoreData();
     const index = data.findIndex(t => t.id === id);
     if (index !== -1) {
       data[index].value = value;
       localStorage.setItem('ctsj-state-todolist', JSON.stringify(data));
       resolve({
         code: 200,
-        data: true,
       });
     }
   });
 };
 
-/**
- * fetchDelete
- * @param id
- * @return {Promise<any>}
- */
-export const fetchDelete = ({ id }) => {
+export const del = (data, id) => {
   return new Promise(resolve => {
-    const data = getStoreData();
     const index = data.findIndex(t => t.id === id);
     if (index !== -1) {
       data.splice(index, 1);
       localStorage.setItem('ctsj-state-todolist', JSON.stringify(data));
       resolve({
         code: 200,
-        data: true,
       });
     }
   });
 };
 
-/**
- * fetchComplete
- * @param id
- * @return {Promise<any>}
- */
-export const fetchComplete = ({ id }) => {
+export const complete = (data, id) => {
   return new Promise(resolve => {
-    const data = getStoreData();
     const index = data.findIndex(t => t.id === id);
     if (index !== -1) {
       data[index].type = 'complete';
       localStorage.setItem('ctsj-state-todolist', JSON.stringify(data));
       resolve({
         code: 200,
-        data: true,
       });
     }
   });
-};
-
-export default {
-  codeKey: 'code',
-  codeSuccessKey: 200,
-  dataKey: 'data',
-  messageKey: 'message',
 };
