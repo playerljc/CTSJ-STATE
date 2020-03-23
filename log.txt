@@ -1,0 +1,8 @@
+.middleware
+ .saga
+  .加入all
+  .加入take
+  .subscriptions
+  .loading
+  .动态加入和修改model的时候store的数据
+  .effects中call别的modal中的effect和reduce

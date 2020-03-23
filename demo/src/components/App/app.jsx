@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from '@ctsj/state/lib/react';
 
-import Header from './header';
-import List from './list';
+import Header from '../Header/header';
+import List from '../List/list';
 
 import './app.less';
 
@@ -16,7 +16,12 @@ const selectorPrefix = 'ctsj-state-todolist';
  */
 class App extends React.PureComponent {
   componentDidMount() {
-    this.props.fetchList();
+    this.props.fetchList({
+      ins: this,
+      success: () => {
+        console.log('AppFetchListSuccess');
+      },
+    });
   }
 
   render() {
@@ -36,7 +41,7 @@ class App extends React.PureComponent {
 const mapStateToProps = ({ todolist }) => todolist;
 
 const mapDispatchToProps = dispatch => ({
-  fetchList: () => dispatch({ type: 'todolist/fetchList' }),
+  fetchList: (params) => dispatch(Object.assign({ type: 'todolist/fetchList' }, params)),
 });
 
 /**

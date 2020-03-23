@@ -4,7 +4,7 @@ import {
   del,
   complete,
   update,
-} from './service';
+} from '../service/service';
 
 export default {
   namespace: 'todolist',

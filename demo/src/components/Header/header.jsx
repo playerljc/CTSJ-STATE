@@ -23,7 +23,13 @@ class Header extends React.PureComponent {
             onKeyUp={(e) => {
               const { which, target: { value } } = e;
               if (which === 13) {
-                this.props.fetchSave(value);
+                this.props.fetchSave({
+                  value,
+                  ins: this,
+                  success: () => {
+                    console.log('HeaderFetchSaveSuccess');
+                  },
+                });
               }
             }}
           />
@@ -36,7 +42,7 @@ class Header extends React.PureComponent {
 const mapStateToProps = ({ todolist }) => todolist;
 
 const mapDispatchToProps = dispatch => ({
-  fetchSave: (value) => dispatch({ type: 'todolist/fetchSave', value }),
+  fetchSave: (params) => dispatch(Object.assign({ type: 'todolist/fetchSave' }, params)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

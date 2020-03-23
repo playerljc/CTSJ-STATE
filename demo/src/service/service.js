@@ -1,4 +1,4 @@
-import uuid from 'uuid/v1';
+import uuid from '_uuid@3.4.0@uuid/v1';
 
 export const list = () => {
   return new Promise(resolve => {

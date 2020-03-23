@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom';
 import { createStore, /* combineReducers, */ applyMiddleware } from '@ctsj/state/lib/state';
 import { Provider } from '@ctsj/state/lib/react';
 import { createLoggerMiddleware } from '@ctsj/state/lib/middleware';
-import sage from './saga';
-import model from './model';
+
+import sage from './util/saga';
+import model from './model/model';
+import App from './components/App/app';
 
 // import * as reducers from './reducers';
-import App from './app';
-
 // const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
 
 sage.model(model);
