@@ -3,6 +3,7 @@ import All from './all';
 import Race from './race';
 import Select from './select';
 import Put from './put';
+import History from './history';
 import Immutable from '../../util/immutable';
 
 /**
@@ -13,6 +14,7 @@ import Immutable from '../../util/immutable';
 class Saga {
   constructor() {
     this.models = new Map();
+    this.history = History;
   }
 
   /**
@@ -22,7 +24,9 @@ class Saga {
    */
   model(model) {
     if (!model) return false;
+    this.clearUnSubscriptions(model);
     this.models.set(model.namespace, model);
+    this.init(model);
     return true;
   }
 
@@ -31,7 +35,12 @@ class Saga {
    * @param namespace
    */
   unmodel(namespace) {
-    this.models.delete(namespace);
+    const model = this.models.get(namespace);
+    if (model) {
+      this.clearUnSubscriptions(model);
+      this.models.delete(namespace);
+      delete this.store.state[namespace];
+    }
   }
 
   /**
@@ -48,7 +57,7 @@ class Saga {
    * @param model
    */
   replaceModel(model) {
-    this.models(model);
+    return this.model(model);
   }
 
   /**
@@ -134,15 +143,75 @@ class Saga {
   }
 
   /**
-   * init - 初始化所有model的state数据到store中
+   * initSubscriptions
+   * @param model
    */
-  init() {
-    const state = {};
-    const entries = this.models.entries();
-    for (const [namespace, model] of entries) {
-      state[namespace] = model.state;
+  initSubscriptions(model) {
+    const { subscriptions = {} } = model;
+    if (subscriptions) {
+      const values = Object.values(subscriptions);
+      values.forEach(v => {
+        v({
+          dispatch: this.store.dispatch,
+          history: this.history,
+        });
+      });
     }
-    return state;
+  }
+
+  /**
+   * clearUnSubscriptions
+   * @param model
+   */
+  clearUnSubscriptions(model) {
+    const { unsubscriptions = {} } = model;
+    if (unsubscriptions) {
+      const values = Object.values(unsubscriptions);
+      values.forEach(v => {
+        v();
+      });
+    }
+  }
+
+  /**
+   * init - 初始化所有model的state数据到store中
+   * @param model
+   */
+  init(model) {
+    const { namespace, state } = model;
+
+    const modelEffectsLoading = {};
+    const effectsKeys = Object.keys(model.effects);
+    effectsKeys.forEach(k => {
+      modelEffectsLoading[`${namespace}/${k}`] = false;
+    });
+    Object.assign(this.store.state, {
+      loading: Object.assign(
+        this.store.state.loading || { global: false },
+        modelEffectsLoading
+      ),
+      [namespace]: [namespace] in this.store.state ? this.store.state[namespace] : state,
+    });
+
+    this.initSubscriptions(model);
+  }
+
+  isGlobalLoading(model, type) {
+    const { namespace } = model;
+
+    const effectsKeys = Object.keys(model.effects);
+
+    let globalLoading = false;
+    const { loading } = this.store.state;
+    for (const key of effectsKeys) {
+      const curType = `${namespace}/${key}`;
+      if (curType !== type) {
+        if (loading[curType]) {
+          globalLoading = true;
+        }
+      }
+    }
+    return globalLoading;
   }
 
   /**
@@ -151,8 +220,19 @@ class Saga {
    * @param action
    * @return Promise
    */
-  before(state, action) {
-    return new Promise(resolve => resolve(state));
+  before({ state, action }) {
+    return new Promise(resolve => {
+      const { type } = action;
+
+      resolve(
+        Object.assign(state, {
+          loading: Object.assign(state.loading, {
+            global: true,
+            [type]: true,
+          }),
+        })
+      );
+    });
   }
 
   /**
@@ -161,33 +241,33 @@ class Saga {
    * @param action
    * @return Promise
    */
-  after(state, action) {
+  after({ state, action }) {
     return new Promise(resolve => {
       const { type, ins, success, ...params } = action;
 
-      if (type === Symbol.for('init')) {
-        // 初始化的返回
-        resolve(this.init());
-      } else {
-        // 其他情况
-        const [namespace, effect] = type.split('/');
+      const [namespace, effect] = type.split('/');
 
-        // 根据命名空间获取model
-        const model = this.models.get(namespace);
-        if (model) {
-          // 获取effects的g
-          const g = model.effects[effect];
+      // 根据命名空间获取model
+      const model = this.models.get(namespace);
+      if (model) {
+        // 获取effects的g
+        const g = model.effects[effect];
 
-          // 迭代model的effects
-          this.run({ g, state, params, model }).then(() => {
-            // model的返回
-            const result = Object.assign(state, { [namespace]: model.state });
-            resolve(result);
+        // 迭代model的effects
+        this.run({ g, state, params, model }).then(() => {
+          // model的返回
+          const result = Object.assign(state, {
+            [namespace]: model.state,
+            loading: Object.assign(this.store.state.loading, {
+              global: this.isGlobalLoading(model, type),
+              [type]: false,
+            }),
           });
-        } else {
-          // 没有model的返回
-          resolve(state);
-        }
+          resolve(result);
+        });
+      } else {
+        // 没有model的返回
+        resolve(state);
       }
     });
   }

@@ -3,6 +3,7 @@ import { connect } from '@ctsj/state/lib/react';
 
 import Header from '../Header/header';
 import List from '../List/list';
+import Spin from '../../components/Spin';
 
 import './app.less';
 
@@ -27,21 +28,29 @@ class App extends React.PureComponent {
   render() {
     const { data } = this.props;
     return (
-      <div className={`${selectorPrefix}`}>
-        <Header />
-        <div className={`${selectorPrefix}-body`}>
-          <List data={data} type="run" />
-          <List data={data} type="complete" />
+      <Spin loading={this.props.loading}>
+        <div className={`${selectorPrefix}`}>
+          <Header />
+          <div className={`${selectorPrefix}-body`}>
+            <List data={data} type="run" />
+            <List data={data} type="complete" />
+          </div>
         </div>
-      </div>
+      </Spin>
     );
   }
 }
 
-const mapStateToProps = ({ todolist }) => todolist;
+const mapStateToProps = ({ todolist, loading: { global } }) => {
+  return {
+    data: todolist.data,
+    loading: global,
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
-  fetchList: (params) => dispatch(Object.assign({ type: 'todolist/fetchList' }, params)),
+  fetchList: params =>
+    dispatch(Object.assign({ type: 'todolist/fetchList' }, params)),
 });
 
 /**

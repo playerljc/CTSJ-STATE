@@ -5,6 +5,14 @@ export default {
   state: {
     data: [],
   },
+  subscriptions: {
+    setup({ history, dispatch }) {
+      console.log('todolist', 'setup');
+      // return history.listen(({ pathname }) => {
+      //   console.log(pathname);
+      // });
+    },
+  },
   effects: {
     *fetchList(params, { call, put }) {
       const res = yield call(list);

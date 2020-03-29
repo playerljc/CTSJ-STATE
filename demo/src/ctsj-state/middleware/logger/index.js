@@ -12,7 +12,7 @@ class Logger {
    * @param action
    * @return Promise
    */
-  before(state, action) {
+  before({state, action}) {
     return new Promise(resolve => {
       logger.group(
         '%caction %c%s @ %c%s',
@@ -34,7 +34,7 @@ class Logger {
    * @param action
    * @return Promise
    */
-  after(state, action) {
+  after({state, action}) {
     return new Promise(resolve => {
       logger.group(
         '%caction %c%s @ %c%s',

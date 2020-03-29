@@ -9,19 +9,23 @@ import model from './model/model';
 import App from './components/App/app';
 
 // import * as reducers from './reducers';
-// const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
-
-sage.model(model);
+const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
 
 const store = createStore(
   // combineReducers(reducers),
   null,
-  {},
+  {
+    todolist: {
+      data: JSON.parse(storeData),
+    },
+  },
   applyMiddleware(
     createLoggerMiddleware(),
     sage,
   )
 );
+
+sage.model(model);
 
 store.subscribe(() => {
   const { todolist: { data = []} } = store.getState();
