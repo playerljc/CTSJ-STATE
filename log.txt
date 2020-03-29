@@ -1,7 +1,8 @@
 .middleware
  .saga
-  .加入all
-  .加入take
+  .加入all - ok
+  .加入race - ok
+  .加入take - notake
   .subscriptions
   .loading
   .动态加入和修改model的时候store的数据

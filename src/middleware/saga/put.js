@@ -6,12 +6,7 @@
  * @param run
  * @return {Function}
  */
-export default ({
-  state,
-  params,
-  model,
-  run,
-}) => ({ type, ...other }) => {
+export default ({ state, params, model, run }) => ({ type, ...other }) => {
   // effects和reducers都已调用
   const { effects, reducers } = model;
 

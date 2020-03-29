@@ -1,4 +1,6 @@
 import Call from './call';
+import All from './all';
+import Race from './race';
 import Select from './select';
 import Put from './put';
 import Immutable from '../../util/immutable';
@@ -59,21 +61,19 @@ class Saga {
   run({ g, state, params, model }) {
     return new Promise((resolve, reject) => {
       // 获取指针
-      const generator = g(
-        params,
-        {
-          call: Call,
-          select: Select(Immutable.cloneDeep(state)),
-          put: Put({
-            state: state[model.namespace],
-            params,
-            model,
-            run: this.run.bind(this),
-          }),
-          // tack: null,
-          // all: null,
-        }
-      );
+      const generator = g(params, {
+        call: Call,
+        all: All,
+        race: Race,
+        select: Select(Immutable.cloneDeep(state)),
+        put: Put({
+          state: state[model.namespace],
+          params,
+          model,
+          run: this.run.bind(this),
+        }),
+        // tack: null,
+      });
 
       /**
        * task
@@ -86,12 +86,14 @@ class Saga {
            * @param neginParams
            */
           function nextBegin(neginParams) {
-            next(neginParams).then(() => {
-              s();
-            }).catch((err) => {
-              generator.throw(err);
-              e(err);
-            });
+            next(neginParams)
+              .then(() => {
+                s();
+              })
+              .catch(err => {
+                generator.throw(err);
+                e(err);
+              });
           }
 
           /**
@@ -103,12 +105,14 @@ class Saga {
           const { value, done } = generator.next(data);
           if (!done) {
             if (value instanceof Promise) {
-              value.then(res => {
-                nextBegin(res);
-              }).catch(err => {
-                generator.throw(err);
-                e(err);
-              });
+              value
+                .then(res => {
+                  nextBegin(res);
+                })
+                .catch(err => {
+                  generator.throw(err);
+                  e(err);
+                });
             } else {
               nextBegin(value);
             }
@@ -118,12 +122,14 @@ class Saga {
         });
       }
 
-      next().then(() => {
-        // 所有任务都完成
-        resolve();
-      }).catch(() => {
-        reject();
-      });
+      next()
+        .then(() => {
+          // 所有任务都完成
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
     });
   }
 
@@ -146,7 +152,7 @@ class Saga {
    * @return Promise
    */
   before(state, action) {
-    return new Promise((resolve => resolve(state)));
+    return new Promise(resolve => resolve(state));
   }
 
   /**
@@ -156,7 +162,7 @@ class Saga {
    * @return Promise
    */
   after(state, action) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const { type, ins, success, ...params } = action;
 
       if (type === Symbol.for('init')) {
@@ -164,10 +170,7 @@ class Saga {
         resolve(this.init());
       } else {
         // 其他情况
-        const [
-          namespace,
-          effect,
-        ] = type.split('/');
+        const [namespace, effect] = type.split('/');
 
         // 根据命名空间获取model
         const model = this.models.get(namespace);
