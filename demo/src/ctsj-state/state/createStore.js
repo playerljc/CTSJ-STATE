@@ -134,7 +134,6 @@ class Store {
    * @param action
    */
   dispatch(action) {
-    debugger
     if (action instanceof Function) {
       action(this.dispatch.bind(this));
     } else if (this.middlewares.length) {
@@ -181,7 +180,7 @@ class Store {
 /**
  * createStore
  * @param {Function} - reducer
- * @param {Object | Array} preloadedState
+ * @param {Object | Array} - preloadedState
  * @param {Array} - middlewares
  * @return {Store}
  */
