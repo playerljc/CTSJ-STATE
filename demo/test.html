@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<script>
+		window.onload = function () {
+			var canvas = document.getElementById('canvas');
+			var ctx = canvas.getContext('2d');
+
+			// 路径1
+			ctx.rect(0,0,100,100);
+			ctx.stroke();
+
+			ctx.clearRect(0,0,1024,768);
+			ctx.beginPath();
+			ctx.rect(100,100,100,100);
+			ctx.closePath();
+      ctx.stroke();
+
+      // ctx.clearRect(0,0,1024,768);
+      // ctx.rect(200,200,100,100);
+      // ctx.stroke();
+
+
+    }
+	</script>
+</head>
+<body>
+	<canvas width="1024" height="768" id="canvas"></canvas>
+</body>
+</html>
