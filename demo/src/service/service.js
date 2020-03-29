@@ -3,11 +3,12 @@ import uuid from '_uuid@3.4.0@uuid/v1';
 export const list = () => {
   return new Promise(resolve => {
     const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
-    console.log(storeData);
-    resolve({
-      code: 200,
-      list: JSON.parse(storeData),
-    });
+    setTimeout(() => {
+      resolve({
+        code: 200,
+        list: JSON.parse(storeData),
+      });
+    },1000);
   });
 };
 
