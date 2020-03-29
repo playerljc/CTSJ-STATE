@@ -1,9 +1,9 @@
-import React from "react";
-import {v1} from 'uuid';
+import React from 'react';
+import { v1 } from 'uuid';
 import ListItem from '../ListItem/index';
-import {ITodo} from "../../interface/index";
+import { ITodo } from '../../interface/index';
 
-import {selectorPrefix} from "../App/index";
+import { selectorPrefix } from '../App/index';
 
 import './index.less';
 

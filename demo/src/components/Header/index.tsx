@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 import './index.less';
 
@@ -12,7 +12,7 @@ class Header extends React.PureComponent<IProps, {}> {
   el: HTMLInputElement;
 
   onKeyUp = (e: React.KeyboardEvent) => {
-    const {which} = e;
+    const { which } = e;
     const value = this.el.value;
     if (which === 13) {
       this.props.onAdd(value);
@@ -26,7 +26,7 @@ class Header extends React.PureComponent<IProps, {}> {
         <div className={`${selectorPrefix}-Input`}>
           <input
             ref={el => {
-              this.el = el
+              this.el = el;
             }}
             placeholder="添加ToDo"
             onKeyUp={this.onKeyUp}

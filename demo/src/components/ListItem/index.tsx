@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {ITodo} from "../../interface/index";
-import {TodoType} from "../../enum/index";
-import {selectorPrefix} from "../App/index";
+import { ITodo } from '../../interface/index';
+import { TodoType } from '../../enum/index';
+import { selectorPrefix } from '../App/index';
 
 import './index.less';
 
@@ -45,7 +45,7 @@ class ListItem extends React.PureComponent<IProps, IState> {
   }
 
   renderEditable() {
-    const {editable = false, value} = this.state;
+    const { editable = false, value } = this.state;
     return editable ?
       (
         <div className={`${selectorPrefix}-list-body-item-inner-editorable`}>
@@ -60,25 +60,26 @@ class ListItem extends React.PureComponent<IProps, IState> {
         <div
           className={`${selectorPrefix}-list-body-item-inner-value`}
           onClick={this.onEditor}
-        >{value}</div>
+        >{value}
+        </div>
 
       );
   }
 
   onEditorBlur() {
-    const {data: {id}, onUpdate} = this.props;
-    const {value} = this.state;
+    const { data: { id }, onUpdate } = this.props;
+    const { value } = this.state;
     this.setState({
       editable: false,
     }, () => {
       if (onUpdate) {
-        onUpdate({id, value});
+        onUpdate({ id, value });
       }
     });
   }
 
   onEditor() {
-    const {data: {type}} = this.props;
+    const { data: { type } } = this.props;
     if (type === TodoType.UnComplete) {
       this.setState({
         editable: true,
@@ -93,7 +94,7 @@ class ListItem extends React.PureComponent<IProps, IState> {
   }
 
   onComplete() {
-    const {data: {type, id}, onComplete} = this.props;
+    const { data: { type, id }, onComplete } = this.props;
     if (type === TodoType.UnComplete) {
       if (onComplete) {
         onComplete(id);
@@ -102,15 +103,14 @@ class ListItem extends React.PureComponent<IProps, IState> {
   }
 
   onDelete() {
-    const {data: {id}, onDelete} = this.props;
+    const { data: { id }, onDelete } = this.props;
     if (onDelete) {
       onDelete(id);
     }
   }
 
   render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
-
-    const {data: {type}} = this.props;
+    const { data: { type } } = this.props;
 
     return (
       <li className={`${selectorPrefix}-list-body-item ${type !== TodoType.UnComplete ? 'disable' : ''}`}>

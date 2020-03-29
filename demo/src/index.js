@@ -15,7 +15,7 @@ const store = createStore(reducer, {
 });
 
 store.subscribe(() => {
-  const { data = [] } = store.getState();
+  const { data = []} = store.getState();
   localStorage.setItem('ctsj-state-todolist', JSON.stringify(data));
 });
 

@@ -1,4 +1,4 @@
-import {TodoType} from "../enum/index";
+import { TodoType } from '../enum/index';
 
 export interface ITodo {
   id: string,
