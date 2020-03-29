@@ -1,10 +1,4 @@
-import {
-  list,
-  save,
-  del,
-  complete,
-  update,
-} from '../service/service';
+import { list, save, del, complete, update } from '../service/service';
 
 export default {
   namespace: 'todolist',
@@ -19,7 +13,7 @@ export default {
       }
     },
     *fetchSave(params, { call, put, select }) {
-      const data = yield select((state) => {
+      const data = yield select(state => {
         return state.todolist.data;
       });
       const res = yield call(save, data, params);
@@ -28,7 +22,7 @@ export default {
       }
     },
     *fetchDelete(params, { call, put, select }) {
-      const data = yield select((state) => {
+      const data = yield select(state => {
         return state.todolist.data;
       });
       const res = yield call(del, data, params.id);
@@ -37,7 +31,7 @@ export default {
       }
     },
     *fetchComplete(params, { call, put, select }) {
-      const data = yield select((state) => {
+      const data = yield select(state => {
         return state.todolist.data;
       });
       const res = yield call(complete, data, params.id);
@@ -46,7 +40,7 @@ export default {
       }
     },
     *fetchUpdate(params, { call, put, select }) {
-      const data = yield select((state) => {
+      const data = yield select(state => {
         return state.todolist.data;
       });
       const res = yield call(update, data, params.id, params.value);
