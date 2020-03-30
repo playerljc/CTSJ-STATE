@@ -1,6 +1,6 @@
-import uuid from '_uuid@3.4.0@uuid/v1';
+import uuid from 'uuid/v1';
 
-export const list = () => {
+export const fetchList = () => {
   return new Promise(resolve => {
     const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
     setTimeout(() => {
@@ -12,7 +12,7 @@ export const list = () => {
   });
 };
 
-export const save = (data, params) => {
+export const fetchSave = (data, params) => {
   return new Promise(resolve => {
     data.push({
       id: uuid(),
@@ -26,7 +26,7 @@ export const save = (data, params) => {
   });
 };
 
-export const update = (data, id, value) => {
+export const fetchUpdate = (data, id, value) => {
   return new Promise(resolve => {
     const index = data.findIndex(t => t.id === id);
     if (index !== -1) {
@@ -39,7 +39,7 @@ export const update = (data, id, value) => {
   });
 };
 
-export const del = (data, id) => {
+export const fetchDelete = (data, id) => {
   return new Promise(resolve => {
     const index = data.findIndex(t => t.id === id);
     if (index !== -1) {
@@ -52,7 +52,7 @@ export const del = (data, id) => {
   });
 };
 
-export const complete = (data, id) => {
+export const fetchComplete = (data, id) => {
   return new Promise(resolve => {
     const index = data.findIndex(t => t.id === id);
     if (index !== -1) {
