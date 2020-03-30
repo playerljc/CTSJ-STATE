@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from '@ctsj/state/lib/react';
+import ServiceRegister from '@ctsj/state/lib/middleware/saga/serviceregister';
 
 import Header from '../Header/header';
 import List from '../List/list';
@@ -48,9 +49,14 @@ const mapStateToProps = ({ todolist, loading: { global } }) => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  fetchList: params =>
-    dispatch(Object.assign({ type: 'todolist/fetchList' }, params)),
+// const mapDispatchToProps = dispatch => ({
+//   fetchList: params =>
+//     dispatch(Object.assign({ type: 'todolist/fetchList' }, params)),
+// });
+
+const mapDispatchToProps = dispatch => ServiceRegister.mapDispatchToProps({
+  namespaces: ['todolist'],
+  dispatch,
 });
 
 /**

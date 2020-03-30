@@ -1,4 +1,4 @@
-import { list, save, del, complete, update } from '../service/service';
+import { fetchList, fetchSave, fetchDelete, fetchComplete, fetchUpdate } from '../service/service';
 
 export default {
   namespace: 'todolist',
@@ -15,7 +15,7 @@ export default {
   },
   effects: {
     *fetchList(params, { call, put }) {
-      const res = yield call(list);
+      const res = yield call(fetchList);
       if (res.code === 200) {
         yield put({ type: 'receive', payload: { data: res.list } });
       }
@@ -24,7 +24,7 @@ export default {
       const data = yield select(state => {
         return state.todolist.data;
       });
-      const res = yield call(save, data, params);
+      const res = yield call(fetchSave, data, params);
       if (res.code === 200) {
         yield put({ type: 'fetchList' });
       }
@@ -33,7 +33,7 @@ export default {
       const data = yield select(state => {
         return state.todolist.data;
       });
-      const res = yield call(del, data, params.id);
+      const res = yield call(fetchDelete, data, params.id);
       if (res.code === 200) {
         yield put({ type: 'fetchList' });
       }
@@ -42,7 +42,7 @@ export default {
       const data = yield select(state => {
         return state.todolist.data;
       });
-      const res = yield call(complete, data, params.id);
+      const res = yield call(fetchComplete, data, params.id);
       if (res.code === 200) {
         yield put({ type: 'fetchList' });
       }
@@ -51,7 +51,7 @@ export default {
       const data = yield select(state => {
         return state.todolist.data;
       });
-      const res = yield call(update, data, params.id, params.value);
+      const res = yield call(fetchUpdate, data, params.id, params.value);
       if (res.code === 200) {
         yield put({ type: 'fetchList' });
       }

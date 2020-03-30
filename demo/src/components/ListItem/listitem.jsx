@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from '@ctsj/state/lib/react';
+import ServiceRegister from '@ctsj/state/lib/middleware/saga/serviceregister';
 
 import './listitem.less';
 
@@ -40,7 +41,7 @@ class ListItem extends React.PureComponent {
   onDelete() {
     const { id, fetchDelete } = this.props;
     if (fetchDelete) {
-      fetchDelete(id);
+      fetchDelete({ id });
     }
   }
 
@@ -51,7 +52,7 @@ class ListItem extends React.PureComponent {
     const { type, id, fetchComplete } = this.props;
     if (type === 'run') {
       if (fetchComplete) {
-        fetchComplete(id);
+        fetchComplete({ id });
       }
     }
   }
@@ -76,7 +77,7 @@ class ListItem extends React.PureComponent {
       editable: false,
     }, () => {
       if (fetchUpdate) {
-        fetchUpdate(id, value);
+        fetchUpdate({ id, value });
       }
     });
   }
@@ -155,10 +156,14 @@ const mapStateToProps = ({ todolist }) => {
  * @param {Function} - dispatch
  * @return {Object}
  */
-const mapDispatchToProps = dispatch => ({
-  fetchDelete: id => dispatch({ type: 'todolist/fetchDelete', id }),
-  fetchComplete: id => dispatch({ type: 'todolist/fetchComplete', id }),
-  fetchUpdate: (id, value) => dispatch({ type: 'todolist/fetchUpdate', id, value }),
+// const mapDispatchToProps = dispatch => ({
+//   fetchDelete: id => dispatch({ type: 'todolist/fetchDelete', id }),
+//   fetchComplete: id => dispatch({ type: 'todolist/fetchComplete', id }),
+//   fetchUpdate: (id, value) => dispatch({ type: 'todolist/fetchUpdate', id, value }),
+// });
+const mapDispatchToProps = dispatch => ServiceRegister.mapDispatchToProps({
+  namespaces: ['todolist'],
+  dispatch,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListItem);

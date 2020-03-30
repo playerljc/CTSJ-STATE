@@ -7,3 +7,6 @@
   .loading - ok
   .动态加入和修改model的时候store的数据 - 暂不考虑
   .effects中call别的modal中的effect和reduce - 暂不考虑
+  .service注册中心
+   .根据接口生成model
+   .根据接口生成mapDispatchToProps

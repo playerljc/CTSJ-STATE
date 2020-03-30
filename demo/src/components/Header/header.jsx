@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from '@ctsj/state/lib/react';
+import ServiceRegister from '@ctsj/state/lib/middleware/saga/serviceregister';
 
 import './header.less';
 
@@ -41,8 +42,13 @@ class Header extends React.PureComponent {
 
 const mapStateToProps = ({ todolist }) => todolist;
 
-const mapDispatchToProps = dispatch => ({
-  fetchSave: (params) => dispatch(Object.assign({ type: 'todolist/fetchSave' }, params)),
+// const mapDispatchToProps = dispatch => ({
+//   fetchSave: (params) => dispatch(Object.assign({ type: 'todolist/fetchSave' }, params)),
+// });
+
+const mapDispatchToProps = dispatch => ServiceRegister.mapDispatchToProps({
+  namespaces: ['todolist'],
+  dispatch,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
