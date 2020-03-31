@@ -1,19 +1,36 @@
 import uuid from 'uuid/v1';
 
+function getStoreData() {
+  const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
+  return JSON.parse(storeData);
+}
+
+/**
+ * fetchList
+ * @return {Promise<any>}
+ */
 export const fetchList = () => {
   return new Promise(resolve => {
     const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
+    debugger
     setTimeout(() => {
       resolve({
         code: 200,
-        list: JSON.parse(storeData),
+        data: JSON.parse(storeData),
       });
-    },1000);
+    }, 1000);
   });
 };
 
-export const fetchSave = (data, params) => {
+/**
+ * fetchSave
+ * @param params
+ * @return {Promise<any>}
+ */
+export const fetchSave = (params) => {
   return new Promise(resolve => {
+    const data = getStoreData();
+    debugger
     data.push({
       id: uuid(),
       value: params.value,
@@ -26,8 +43,15 @@ export const fetchSave = (data, params) => {
   });
 };
 
-export const fetchUpdate = (data, id, value) => {
+/**
+ * fetchUpdate
+ * @param id
+ * @param value
+ * @return {Promise<any>}
+ */
+export const fetchUpdate = ({id, value}) => {
   return new Promise(resolve => {
+    const data = getStoreData();
     const index = data.findIndex(t => t.id === id);
     if (index !== -1) {
       data[index].value = value;
@@ -39,8 +63,14 @@ export const fetchUpdate = (data, id, value) => {
   });
 };
 
-export const fetchDelete = (data, id) => {
+/**
+ * fetchDelete
+ * @param id
+ * @return {Promise<any>}
+ */
+export const fetchDelete = ({id}) => {
   return new Promise(resolve => {
+    const data = getStoreData();
     const index = data.findIndex(t => t.id === id);
     if (index !== -1) {
       data.splice(index, 1);
@@ -52,8 +82,14 @@ export const fetchDelete = (data, id) => {
   });
 };
 
-export const fetchComplete = (data, id) => {
+/**
+ * fetchComplete
+ * @param id
+ * @return {Promise<any>}
+ */
+export const fetchComplete = ({id}) => {
   return new Promise(resolve => {
+    const data = getStoreData();
     const index = data.findIndex(t => t.id === id);
     if (index !== -1) {
       data[index].type = 'complete';
@@ -63,4 +99,11 @@ export const fetchComplete = (data, id) => {
       });
     }
   });
+};
+
+export default {
+  codeKey: 'code',
+  codeSuccessKey: 200,
+  dataKey: 'data',
+  messageKey: 'message',
 };

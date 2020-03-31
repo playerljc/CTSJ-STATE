@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {
@@ -17,6 +18,7 @@ import App from './components/App/app';
 ServiceRegister.initConfig({
   todolist: Service,
 });
+
 
 // import * as reducers from './reducers';
 const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
