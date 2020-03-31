@@ -24,11 +24,17 @@ class Header extends React.PureComponent {
             onKeyUp={(e) => {
               const { which, target: { value } } = e;
               if (which === 13) {
-                this.props.fetchSave({
+                this.props.todolistFetchSave({
                   value,
                   ins: this,
                   success: () => {
                     console.log('HeaderFetchSaveSuccess');
+                    this.props.todolistFetchList({
+                      ins: this,
+                      success: () => {
+                        console.log('AppFetchListSuccess');
+                      },
+                    });
                   },
                 });
               }
@@ -40,11 +46,17 @@ class Header extends React.PureComponent {
   }
 }
 
-const mapStateToProps = ({ todolist }) => todolist;
+// const mapStateToProps = ({ todolist }) => todolist;
 
 // const mapDispatchToProps = dispatch => ({
 //   fetchSave: (params) => dispatch(Object.assign({ type: 'todolist/fetchSave' }, params)),
 // });
+
+const mapStateToProps = state =>
+  ServiceRegister.mapStateToProps({
+    namespace: 'todolist',
+    state,
+  });
 
 const mapDispatchToProps = dispatch => ServiceRegister.mapDispatchToProps({
   namespaces: ['todolist'],

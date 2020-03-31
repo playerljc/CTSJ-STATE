@@ -35,13 +35,28 @@ class ListItem extends React.PureComponent {
     });
   }
 
+  refreshList() {
+    this.props.todolistFetchList({
+      ins: this,
+      success: () => {
+        console.log('AppFetchListSuccess');
+      },
+    });
+  }
+
   /**
    * onDelete
    */
   onDelete() {
-    const { id, fetchDelete } = this.props;
-    if (fetchDelete) {
-      fetchDelete({ id });
+    const { id, todolistFetchDelete } = this.props;
+    if (todolistFetchDelete) {
+      todolistFetchDelete({
+        id,
+        ins: this,
+        success: () => {
+          this.refreshList();
+        },
+      });
     }
   }
 
@@ -49,10 +64,16 @@ class ListItem extends React.PureComponent {
    * onComplete
    */
   onComplete() {
-    const { type, id, fetchComplete } = this.props;
+    const { type, id, todolistFetchComplete } = this.props;
     if (type === 'run') {
-      if (fetchComplete) {
-        fetchComplete({ id });
+      if (todolistFetchComplete) {
+        todolistFetchComplete({
+          id,
+          ins: this,
+          success: () => {
+            this.refreshList();
+          },
+        });
       }
     }
   }
@@ -71,13 +92,20 @@ class ListItem extends React.PureComponent {
    * onEditorBlur
    */
   onEditorBlur() {
-    const { id, fetchUpdate } = this.props;
+    const { id, todolistFetchUpdate } = this.props;
     const { value } = this.state;
     this.setState({
       editable: false,
     }, () => {
-      if (fetchUpdate) {
-        fetchUpdate({ id, value });
+      if (todolistFetchUpdate) {
+        todolistFetchUpdate({
+          id,
+          value,
+          ins: this,
+          success: () => {
+            this.refreshList();
+          },
+        });
       }
     });
   }
@@ -142,14 +170,14 @@ class ListItem extends React.PureComponent {
   }
 }
 
-/**
- * mapStateToProps
- * @param {Object} - state
- * @return {Object|Array}
- */
-const mapStateToProps = ({ todolist }) => {
-  return todolist;
-};
+// /**
+//  * mapStateToProps
+//  * @param {Object} - state
+//  * @return {Object|Array}
+//  */
+// const mapStateToProps = ({ todolist }) => {
+//   return todolist;
+// };
 
 /**
  * mapDispatchToProps
@@ -161,6 +189,13 @@ const mapStateToProps = ({ todolist }) => {
 //   fetchComplete: id => dispatch({ type: 'todolist/fetchComplete', id }),
 //   fetchUpdate: (id, value) => dispatch({ type: 'todolist/fetchUpdate', id, value }),
 // });
+
+const mapStateToProps = state =>
+  ServiceRegister.mapStateToProps({
+    namespace: 'todolist',
+    state,
+  });
+
 const mapDispatchToProps = dispatch => ServiceRegister.mapDispatchToProps({
   namespaces: ['todolist'],
   dispatch,

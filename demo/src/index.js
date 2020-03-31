@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {
@@ -18,6 +19,7 @@ ServiceRegister.initConfig({
   todolist: Service,
 });
 
+
 // import * as reducers from './reducers';
 const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
 
@@ -26,20 +28,13 @@ const store = createStore(
   null,
   {
     todolist: {
-      data: JSON.parse(storeData),
+      fetchList: JSON.parse(storeData),
     },
   },
   applyMiddleware(createLoggerMiddleware(), sage)
 );
 
-sage.model(model);
-
-store.subscribe(() => {
-  const {
-    todolist: { data = []},
-  } = store.getState();
-  localStorage.setItem('ctsj-state-todolist', JSON.stringify(data));
-});
+sage.model(model());
 
 ReactDOM.render(
   <Provider store={store}>

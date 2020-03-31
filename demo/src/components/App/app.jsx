@@ -18,7 +18,7 @@ const selectorPrefix = 'ctsj-state-todolist';
  */
 class App extends React.PureComponent {
   componentDidMount() {
-    this.props.fetchList({
+    this.props.todolistFetchList({
       ins: this,
       success: () => {
         console.log('AppFetchListSuccess');
@@ -27,14 +27,17 @@ class App extends React.PureComponent {
   }
 
   render() {
-    const { data } = this.props;
+    const {
+      todolist: { fetchList },
+    } = this.props;
+
     return (
       <Spin loading={this.props.loading}>
         <div className={`${selectorPrefix}`}>
           <Header />
           <div className={`${selectorPrefix}-body`}>
-            <List data={data} type="run" />
-            <List data={data} type="complete" />
+            <List data={fetchList} type="run" />
+            <List data={fetchList} type="complete" />
           </div>
         </div>
       </Spin>
@@ -42,22 +45,29 @@ class App extends React.PureComponent {
   }
 }
 
-const mapStateToProps = ({ todolist, loading: { global } }) => {
-  return {
-    data: todolist.data,
-    loading: global,
-  };
-};
+// const mapStateToProps = ({ todolist, loading: { global } }) => {
+//   return {
+//     data: todolist.fetchList,
+//     loading: global,
+//   };
+// };
 
 // const mapDispatchToProps = dispatch => ({
 //   fetchList: params =>
 //     dispatch(Object.assign({ type: 'todolist/fetchList' }, params)),
 // });
 
-const mapDispatchToProps = dispatch => ServiceRegister.mapDispatchToProps({
-  namespaces: ['todolist'],
-  dispatch,
-});
+const mapStateToProps = state =>
+  ServiceRegister.mapStateToProps({
+    namespace: 'todolist',
+    state,
+  });
+
+const mapDispatchToProps = dispatch =>
+  ServiceRegister.mapDispatchToProps({
+    namespaces: ['todolist'],
+    dispatch,
+  });
 
 /**
  * App
