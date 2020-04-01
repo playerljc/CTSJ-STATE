@@ -185,7 +185,7 @@ const store = createStore(reducer, {
 **Provider** props：
   - store - Store 例子：
 
-```
+```js
 
 import { Provider } from '@ctsj/state/lib/react';
 ReactDOM.render(
@@ -204,7 +204,7 @@ ReactDOM.render(
   - React组件
   - Callback - 渲染完成会后的回调函数 例子：
 
-```
+```js
 
 import React from 'react';
 import { connect } from '@ctsj/state/lib/react';
