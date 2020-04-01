@@ -21,14 +21,14 @@ class List extends React.PureComponent {
       <div className={`${selectorPrefix}-list`}>
         <div className={`${selectorPrefix}-list-header`}>
           <div className={`${selectorPrefix}-list-header-title`}>{title}</div>
-          <div className={`${selectorPrefix}-list-header-count`}>{curData.length}</div>
+          <div className={`${selectorPrefix}-list-header-count`}>
+            {curData.length}
+          </div>
         </div>
-        <ul className={`${selectorPrefix}-list-body`} >
-          {
-            curData.map((t) => {
-              return <ListItem key={t.id} {...t} />;
-            })
-          }
+        <ul className={`${selectorPrefix}-list-body`}>
+          {curData.map(t => {
+            return <ListItem key={t.id} {...t} />;
+          })}
         </ul>
       </div>
     );

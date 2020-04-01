@@ -21,8 +21,11 @@ class Header extends React.PureComponent {
           <input
             placeholder="添加ToDo"
             type="text"
-            onKeyUp={(e) => {
-              const { which, target: { value } } = e;
+            onKeyUp={e => {
+              const {
+                which,
+                target: { value },
+              } = e;
               if (which === 13) {
                 this.props.todolistFetchSave({
                   value,
@@ -58,9 +61,10 @@ const mapStateToProps = state =>
     state,
   });
 
-const mapDispatchToProps = dispatch => ServiceRegister.mapDispatchToProps({
-  namespaces: ['todolist'],
-  dispatch,
-});
+const mapDispatchToProps = dispatch =>
+  ServiceRegister.mapDispatchToProps({
+    namespaces: ['todolist'],
+    dispatch,
+  });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

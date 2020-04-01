@@ -12,7 +12,7 @@ function getStoreData() {
 export const fetchList = () => {
   return new Promise(resolve => {
     const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
-    debugger
+    debugger;
     setTimeout(() => {
       resolve({
         code: 200,
@@ -27,10 +27,10 @@ export const fetchList = () => {
  * @param params
  * @return {Promise<any>}
  */
-export const fetchSave = (params) => {
+export const fetchSave = params => {
   return new Promise(resolve => {
     const data = getStoreData();
-    debugger
+    debugger;
     data.push({
       id: uuid(),
       value: params.value,
@@ -49,7 +49,7 @@ export const fetchSave = (params) => {
  * @param value
  * @return {Promise<any>}
  */
-export const fetchUpdate = ({id, value}) => {
+export const fetchUpdate = ({ id, value }) => {
   return new Promise(resolve => {
     const data = getStoreData();
     const index = data.findIndex(t => t.id === id);
@@ -68,7 +68,7 @@ export const fetchUpdate = ({id, value}) => {
  * @param id
  * @return {Promise<any>}
  */
-export const fetchDelete = ({id}) => {
+export const fetchDelete = ({ id }) => {
   return new Promise(resolve => {
     const data = getStoreData();
     const index = data.findIndex(t => t.id === id);
@@ -87,7 +87,7 @@ export const fetchDelete = ({id}) => {
  * @param id
  * @return {Promise<any>}
  */
-export const fetchComplete = ({id}) => {
+export const fetchComplete = ({ id }) => {
   return new Promise(resolve => {
     const data = getStoreData();
     const index = data.findIndex(t => t.id === id);

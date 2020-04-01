@@ -94,20 +94,23 @@ class ListItem extends React.PureComponent {
   onEditorBlur() {
     const { id, todolistFetchUpdate } = this.props;
     const { value } = this.state;
-    this.setState({
-      editable: false,
-    }, () => {
-      if (todolistFetchUpdate) {
-        todolistFetchUpdate({
-          id,
-          value,
-          ins: this,
-          success: () => {
-            this.refreshList();
-          },
-        });
+    this.setState(
+      {
+        editable: false,
+      },
+      () => {
+        if (todolistFetchUpdate) {
+          todolistFetchUpdate({
+            id,
+            value,
+            ins: this,
+            success: () => {
+              this.refreshList();
+            },
+          });
+        }
       }
-    });
+    );
   }
 
   /**
@@ -128,23 +131,19 @@ class ListItem extends React.PureComponent {
    */
   renderEditable() {
     const { editable = false, value } = this.state;
-    return editable ?
-      (
-        <div className={`${selectorPrefix}-inner-editorable`}>
-          <input
-            value={value}
-            onChange={this.onEditorChange}
-            onBlur={this.onEditorBlur}
-          />
-        </div>
-      ) :
-      (
-        <div
-          className={`${selectorPrefix}-inner-value`}
-          onClick={this.onEditor}
-        >{value}
-        </div>
-      );
+    return editable ? (
+      <div className={`${selectorPrefix}-inner-editorable`}>
+        <input
+          value={value}
+          onChange={this.onEditorChange}
+          onBlur={this.onEditorBlur}
+        />
+      </div>
+    ) : (
+      <div className={`${selectorPrefix}-inner-value`} onClick={this.onEditor}>
+        {value}
+      </div>
+    );
   }
 
   render() {
@@ -196,10 +195,10 @@ const mapStateToProps = state =>
     state,
   });
 
-const mapDispatchToProps = dispatch => ServiceRegister.mapDispatchToProps({
-  namespaces: ['todolist'],
-  dispatch,
-});
+const mapDispatchToProps = dispatch =>
+  ServiceRegister.mapDispatchToProps({
+    namespaces: ['todolist'],
+    dispatch,
+  });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListItem);
-

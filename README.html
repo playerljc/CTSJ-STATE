@@ -1,53 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head lang=en>
-  <meta charset=utf-8>
-  <meta name=viewport
-        content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
-  <title></title>
+	<meta charset=utf-8>
+	<meta content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover"
+				name=viewport>
+	<title></title>
 </head>
 
 <body>
 <h1>CTSJ-STATE</h1>
-<h3>一个简单的状态集管理</h3>
-<h4>把redux和react-redux结合起来的一个简版状态集</h4>
 <ul>
-  <li>
-    <a href="#state">状态集本身</a>
-    <ul>
-      <li><a href="#createStore">createStore</a></li>
-      <li><a href="#combineReducers">combineReducers</a></li>
-      <li><a href="#Store">Store</a></li>
-    </ul>
-  </li>
-  <li>
-    <a href="#reactuse">React中使用</a>
-    <ul>
-      <li><a href="#Provider">Provider</a></li>
-      <li><a href="#connect">connect</a></li>
-    </ul>
-  </li>
-  <li>
-    <a href="#toDoList">ToDoList的demo</a>
-  </li>
+	<li><h4>一个简单的状态集管理(同时实现了dva数据流和logger中间件)</h4></li>
 </ul>
 
+<h2>简介</h2>
+<ul>
+	<li><h4>把redux、react-redux、redux-logger和dva数据流结合起来的一个简版状态集</h4></li>
+	<li><h4>本数据集的特点是增加了同步的回调功能和根据Servive自动生成model和mapStateToProps、mapDispatchToProps和Model功能</h4></li>
+</ul>
 
-<h3 id="state">状态集本身</h3>
+<h2>安装</h2>
+<code>
+<pre>
+	npm install @ctsj/state
+</pre>
+</code>
 
-<div id="createStore">
-  <h4>.createStore</h4>
-  <div>说明：</div>
-  <ul>
-    <li>createStore(reducer,preloadedState)</li>
-    <ul>
-      <li>reducer-和redux的reducer一致</li>
-      <li>preloadedState-Store的初始化值</li>
-    </ul>
-  </ul>
+<h2>目录</h2>
+<ul>
+	<li>
+		<a href="#state">状态集本身</a>
+		<ul>
+			<li><a href="#createStore">createStore</a></li>
+			<li><a href="#combineReducers">combineReducers</a></li>
+			<li><a href="#Store">Store</a></li>
+		</ul>
+	</li>
+	<li>
+		<a href="#reactuse">React中使用</a>
+		<ul>
+			<li><a href="#Provider">Provider</a></li>
+			<li><a href="#connect">connect</a></li>
+		</ul>
+	</li>
+	<li>
+		<a href="#middleware">中间件</a>
+		<ul>
+			<li><a href="#logger">logger中间件</a></li>
+			<li><a href="#saga">saga中间件</a></li>
+		</ul>
+	</li>
+	<li>
+		<a href="#serviceGenerator">用Service自动生成mapStateToProps、mapDispatchToProps和Model</a>
+	</li>
+	<li>
+		<a href="#toDoList">ToDoList的demo</a>
+	</li>
+</ul>
 
-  <div>例子：</div>
-  <pre>
+<h2 id="state">状态集本身</h2>
+<ul>
+	<li>
+		<div id="createStore">
+			<h4>createStore</h4>
+			<div>说明：</div>
+			<ul>
+				<li>createStore(reducer,preloadedState)</li>
+				<ul>
+					<li>reducer-和redux的reducer一致</li>
+					<li>preloadedState-Store的初始化值</li>
+				</ul>
+			</ul>
+
+			<div>例子：</div>
+			<pre>
 <code>
 import { createStore } from '@ctsj/state/lib/state';
 
@@ -67,17 +93,18 @@ function reducer(state,action) {
 const store = createStore(reducer, {a:1,b:2});
 </code>
 </pre>
-</div>
+		</div>
+	</li>
+	<li>
+		<div id="combineReducers">
+			<h4>combineReducers</h4>
+			<div>说明：</div>
+			<ul>
+				<li>reducers- Object</li>
+			</ul>
 
-<div id="combineReducers">
-  <h4>.combineReducers</h4>
-  <div>说明：</div>
-  <ul>
-    <li>reducers- Object</li>
-  </ul>
-
-  <div>例子：</div>
-  <pre>
+			<div>例子：</div>
+			<pre>
 <code>
 reducer.jsx
 
@@ -187,29 +214,34 @@ const store = createStore(reducer, {
 });
 </code>
 </pre>
-</div>
+		</div>
+	</li>
+</ul>
 
-<div id="Store">
-  <h4>.Store</h4>
-  <div>方法：</div>
-  <ul>
-    <li>getStatus - 返回state</li>
-    <li>subscribe - 监听state的数据变化,返回值是注销监听句柄</li>
-    <li>dispatch - action 发送数据改变</li>
-  </ul>
-</div>
+<h2 id="Store">Store</h2>
+<ul>
+	<li>
+		<div>方法：</div>
+		<ul>
+			<li>getStatus - 返回state</li>
+			<li>subscribe - 监听state的数据变化,返回值是注销监听句柄</li>
+			<li>dispatch - action 发送数据改变</li>
+		</ul>
+	</li>
+</ul>
 
-<h3 id="reactuse">React中使用</h3>
+<h2 id="reactuse">React中使用</h2>
+<ul>
+	<li>
+		<div id="Provider">
+		<h4>Provider</h4>
+		<div>props：</div>
+		<ul>
+			<li>store - Store</li>
+		</ul>
 
-<div id="Provider">
-  <h4>.Provider</h4>
-  <div>props：</div>
-  <ul>
-    <li>store - Store</li>
-  </ul>
-
-  <div>例子：</div>
-  <pre>
+		<div>例子：</div>
+		<pre>
 <code>
 import { Provider } from '@ctsj/state/lib/react';
 ReactDOM.render(
@@ -222,20 +254,22 @@ ReactDOM.render(
 );
 </code>
 </pre>
-</div>
+	</div>
+	</li>
 
-<div id="connect">
-  <h4>.Provider</h4>
-  <div>说明：</div>
-  <ul>
-    <li>mapStateToProps - 处理state到props的合并</li>
-    <li>mapDispatchToProps - 用dispatch处理数据改变</li>
-    <li>React组件</li>
-    <li>Callback - 渲染完成会后的回调函数</li>
-  </ul>
+	<li>
+		<div id="connect">
+		<h4>connect</h4>
+		<div>说明：</div>
+		<ul>
+			<li>mapStateToProps - 处理state到props的合并</li>
+			<li>mapDispatchToProps - 用dispatch处理数据改变</li>
+			<li>React组件</li>
+			<li>Callback - 渲染完成会后的回调函数</li>
+		</ul>
 
-  <div>例子：</div>
-<pre>
+		<div>例子：</div>
+		<pre>
 <code>
 import React from 'react';
 import { connect } from '@ctsj/state/lib/react';
@@ -290,20 +324,94 @@ export default connect(mapStateToProps, mapDispatchToProps)(Header);
 
 </code>
 </pre>
-</div>
+	</div>
+	</li>
+</ul>
+
+<h2 id="middleware">中间件</h2>
+<ul>
+	<li>
+		<h4 id="logger">logger中间件</h4>
+		<code>
+			<pre>
+import {
+  createStore,
+  applyMiddleware,
+} from '@ctsj/state/lib/state';
+import { createLoggerMiddleware } from '@ctsj/state/lib/middleware';
+
+const store = createStore(
+  null,
+  {},
+  applyMiddleware(createLoggerMiddleware())
+);
+			</pre>
+		</code>
+	</li>
+	<li>
+		<h4 id="saga">saga中间件</h4>
+		<p>和dva用法一致</p>
+		<ul>
+			<li>
+				<p>引入</p>
+				<code>
+					<pre>
+import {
+  createStore,
+  applyMiddleware,
+} from '@ctsj/state/lib/state';
+import { createSagaMiddleware } from '@ctsj/state/lib/middleware';
+
+const store = createStore(
+  null,
+  {},
+  applyMiddleware(createSagaMiddleware())
+);
+					</pre>
+				</code>
+			</li>
+			<li>
+				<p>Model</p>
+				<code>
+					<pre>
+export default {
+	namespace: 'todolist',
+	state:{
+		data: [],
+	},
+	effects: {
+		*fetchList(params.{call,all,put,select}){
+			...
+		}
+	},
+	reducers: {
+		receive(state, { payload }) {
+			return {
+				...state,
+				...payload,
+			};
+		},
+	},
+}
+					</pre>
+				</code>
+			</li>
+		</ul>
+	</li>
+</ul>
+
+<h2 id="serviceGenerator">用Service自动生成mapStateToProps、mapDispatchToProps和Model</h2>
+<ul><li><a target="_blank" href="https://github.com/playerljc/CTSJ-DvaGenerator">具体请参开此链接</a></li></ul>
+
+<h2 id="toDoList">ToDoList</h2>
+<p>进入demo目录</p>
+<ol>
+	<li>npm install</li>
+	<li>npm run startapp</li>
+	<li>浏览器输入localhost:8000</li>
+</ol>
 
 
-<div id="toDoList">
-  <h3>.ToDoList</h3>
-  进入demo目录
-<pre>
-<code>
-npm install
-npm run startapp
-浏览器输入localhost:8000
-</code>
-</pre>
-</div>
 
 </body>
 

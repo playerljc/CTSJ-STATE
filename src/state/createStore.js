@@ -27,8 +27,11 @@ class Store {
     this.reducer = reducer || (state => state);
     this.state = Object.assign({}, preloadedState);
     this.middlewares = middlewares || [];
+    // 给每一个middleware赋值store
+    this.middlewares.forEach(m => {
+      m.store = this;
+    });
     this.listeners = [];
-    this.dispatch({ type: Symbol.for('init') });
   }
 
   /**
@@ -57,7 +60,10 @@ class Store {
           } else {
             const middleware = this.middlewares[index--];
             middleware
-              .before(cloneState, action)
+              .before({
+                state: cloneState,
+                action,
+              })
               .then(state => {
                 cloneState = state;
                 next().then(() => {
@@ -97,7 +103,10 @@ class Store {
           } else {
             const middleware = this.middlewares[index++];
             middleware
-              .after(cloneState, action)
+              .after({
+                state: cloneState,
+                action,
+              })
               .then(state => {
                 cloneState = state;
                 next().then(() => {
@@ -122,32 +131,33 @@ class Store {
 
   /**
    * dispatch
-   * type - > model -> effect
-   * @param {Object | Function} - action
+   * @param action
    */
   dispatch(action) {
-    const { type } = action;
-
     if (action instanceof Function) {
       action(this.dispatch.bind(this));
     } else if (this.middlewares.length) {
+      // 如果有middlewares
       // before
       this.runBeforeMiddlewares(action).then(beforeCloneState => {
+        this.state = beforeCloneState;
+        // before的时候去掉action中的success
+        const { success, ...filterAction } = action;
+        trigger.call(this, filterAction);
+
         // detail
-        this.state = this.reducer(beforeCloneState, action);
+        this.state = this.reducer(Immutable.cloneDeep(this.state), action);
+
         // after
         this.runAfterMiddlewares(action).then(afterCloneState => {
           this.state = afterCloneState;
-          if (type !== Symbol.for('init')) {
-            trigger.call(this, action);
-          }
+          trigger.call(this, action);
         });
       });
     } else {
+      // 如果没有middlewares
       this.state = this.reducer(Immutable.cloneDeep(this.state), action);
-      if (type !== Symbol.for('init')) {
-        trigger.call(this, action);
-      }
+      trigger.call(this, action);
     }
   }
 
@@ -170,7 +180,7 @@ class Store {
 /**
  * createStore
  * @param {Function} - reducer
- * @param {Object | Array} preloadedState
+ * @param {Object | Array} - preloadedState
  * @param {Array} - middlewares
  * @return {Store}
  */

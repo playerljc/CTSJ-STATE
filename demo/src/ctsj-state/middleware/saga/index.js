@@ -190,7 +190,8 @@ class Saga {
         this.store.state.loading || { global: false },
         modelEffectsLoading
       ),
-      [namespace]: [namespace] in this.store.state ? this.store.state[namespace] : state,
+      [namespace]:
+        [namespace] in this.store.state ? this.store.state[namespace] : state,
     });
 
     this.initSubscriptions(model);
