@@ -45,23 +45,11 @@ class App extends React.PureComponent {
   }
 }
 
-// const mapStateToProps = ({ todolist, loading: { global } }) => {
-//   return {
-//     data: todolist.fetchList,
-//     loading: global,
-//   };
-// };
+const mapStateToProps = state => ServiceRegister.mapStateToProps({
+  namespace: 'todolist',
+  state,
+});
 
-// const mapDispatchToProps = dispatch => ({
-//   fetchList: params =>
-//     dispatch(Object.assign({ type: 'todolist/fetchList' }, params)),
-// });
-
-const mapStateToProps = state =>
-  ServiceRegister.mapStateToProps({
-    namespace: 'todolist',
-    state,
-  });
 
 const mapDispatchToProps = dispatch =>
   ServiceRegister.mapDispatchToProps({

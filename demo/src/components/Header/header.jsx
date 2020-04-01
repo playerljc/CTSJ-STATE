@@ -49,12 +49,6 @@ class Header extends React.PureComponent {
   }
 }
 
-// const mapStateToProps = ({ todolist }) => todolist;
-
-// const mapDispatchToProps = dispatch => ({
-//   fetchSave: (params) => dispatch(Object.assign({ type: 'todolist/fetchSave' }, params)),
-// });
-
 const mapStateToProps = state =>
   ServiceRegister.mapStateToProps({
     namespace: 'todolist',

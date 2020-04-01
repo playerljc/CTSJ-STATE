@@ -12,7 +12,6 @@ function getStoreData() {
 export const fetchList = () => {
   return new Promise(resolve => {
     const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
-    debugger;
     setTimeout(() => {
       resolve({
         code: 200,
@@ -30,7 +29,6 @@ export const fetchList = () => {
 export const fetchSave = params => {
   return new Promise(resolve => {
     const data = getStoreData();
-    debugger;
     data.push({
       id: uuid(),
       value: params.value,
@@ -39,6 +37,7 @@ export const fetchSave = params => {
     localStorage.setItem('ctsj-state-todolist', JSON.stringify(data));
     resolve({
       code: 200,
+      data: true,
     });
   });
 };
@@ -58,6 +57,7 @@ export const fetchUpdate = ({ id, value }) => {
       localStorage.setItem('ctsj-state-todolist', JSON.stringify(data));
       resolve({
         code: 200,
+        data: true,
       });
     }
   });
@@ -77,6 +77,7 @@ export const fetchDelete = ({ id }) => {
       localStorage.setItem('ctsj-state-todolist', JSON.stringify(data));
       resolve({
         code: 200,
+        data: true,
       });
     }
   });
@@ -96,6 +97,7 @@ export const fetchComplete = ({ id }) => {
       localStorage.setItem('ctsj-state-todolist', JSON.stringify(data));
       resolve({
         code: 200,
+        data: true,
       });
     }
   });

@@ -46,10 +46,10 @@ export default (mapStateToProps, mapDispatchToProps) => {
           () => {
             // 如果是当前实力进行的数据更改才会调用success
             const { success, ins, ...other } = action;
-            // console.log('redux进行了数据改变的通知');
-            // console.log(action);
-            // console.log(this.ins);
-            // console.log(this.ins === ins);
+            console.log('redux进行了数据改变的通知');
+            console.log(action);
+            console.log(this.ins);
+            console.log(this.ins === ins);
             if (success && ins) {
               if (this.ins === ins) {
                 success.call(ins, Immutable.cloneDeep(other));

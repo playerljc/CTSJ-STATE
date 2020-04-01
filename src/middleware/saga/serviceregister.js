@@ -113,17 +113,14 @@ export default {
       if (key !== 'default') {
         // params是调用mapDispatchToProps的参数
         // success是回调函数
-        model.effects[key] = function*({ success, ...other }, { call, put }) {
-          const response = yield call(Service[key], other);
+        model.effects[key] = function*(params, { call, put }) {
+          const response = yield call(Service[key], params);
           // Service中的默认导出必须有的键
           // codeKey为状态域
           // codeSuccessKey为状态域中成功标识
           // dataKey为数据域
           const { codeKey, codeSuccessKey, dataKey } = Service.default;
           if (response[codeKey] === codeSuccessKey) {
-            if (success) {
-              success();
-            }
             // 向数据流里放入Service的方法名为key,response[dataKey]为值的数据
             yield put({
               type: 'receive',

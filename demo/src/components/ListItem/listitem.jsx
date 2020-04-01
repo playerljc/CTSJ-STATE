@@ -169,26 +169,6 @@ class ListItem extends React.PureComponent {
   }
 }
 
-// /**
-//  * mapStateToProps
-//  * @param {Object} - state
-//  * @return {Object|Array}
-//  */
-// const mapStateToProps = ({ todolist }) => {
-//   return todolist;
-// };
-
-/**
- * mapDispatchToProps
- * @param {Function} - dispatch
- * @return {Object}
- */
-// const mapDispatchToProps = dispatch => ({
-//   fetchDelete: id => dispatch({ type: 'todolist/fetchDelete', id }),
-//   fetchComplete: id => dispatch({ type: 'todolist/fetchComplete', id }),
-//   fetchUpdate: (id, value) => dispatch({ type: 'todolist/fetchUpdate', id, value }),
-// });
-
 const mapStateToProps = state =>
   ServiceRegister.mapStateToProps({
     namespace: 'todolist',
