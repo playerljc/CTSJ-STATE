@@ -1,8 +1,21 @@
 # CTSJ-STATE
 
-### 一个简单的状态集管理
+* **一个简单的状态集管理(同时实现了dva数据流和logger中间件)*
 
-#### 把redux和react-redux结合起来的一个简版状态集
+## 简介
+
+* **把redux、react-redux、redux-logger和dva数据流结合起来的一个简版状态集**
+* **本数据集的特点是增加了同步的回调功能和根据Servive自动生成model和mapStateToProps、mapDispatchToProps和Model功能*
+
+## 安装
+
+`
+<pre>
+	npm install @ctsj/state
+</pre>
+`
+
+## 目录
 
 * [状态集本身](#state)
   - [createStore](#createstore)
@@ -11,19 +24,18 @@
 * [React中使用](#reactuse)
   - [Provider](#provider)
   - [connect](#connect)
+* [中间件](#middleware)
+  - [logger中间件](#logger)
+  - [saga中间件](#saga)
+* [用Service自动生成mapStateToProps、mapDispatchToProps和Model](#servicegenerator)
 * [ToDoList的demo](#todolist)
 
-### 状态集本身
+## 状态集本身
 
-#### .createStore
-
- 说明：
-
-* createStore(reducer,preloadedState)
-  - reducer-和redux的reducer一致
-  - preloadedState-Store的初始化值
-
- 例子：
+***createStore** 说明：
+  - createStore(reducer,preloadedState)
+    + reducer-和redux的reducer一致
+    + preloadedState-Store的初始化值 例子：
 
 ```
 
@@ -44,14 +56,8 @@ function reducer(state,action) {
 
 const store = createStore(reducer, {a:1,b:2});
 ```
-
-#### .combineReducers
-
- 说明：
-
-* reducers- Object
-
- 例子：
+***combineReducers** 说明：
+  - reducers- Object 例子：
 
 ```
 
@@ -163,23 +169,17 @@ const store = createStore(reducer, {
 });
 ```
 
-#### .Store
+## Store
 
- 方法：
+* 方法：
+  - getStatus - 返回state
+  - subscribe - 监听state的数据变化,返回值是注销监听句柄
+  - dispatch - action 发送数据改变
 
-* getStatus - 返回state
-* subscribe - 监听state的数据变化,返回值是注销监听句柄
-* dispatch - action 发送数据改变
+## React中使用
 
-### React中使用
-
-#### .Provider
-
-props：
-
-* store - Store
-
- 例子：
+***Provider** props：
+  - store - Store 例子：
 
 ```
 
@@ -192,18 +192,12 @@ ReactDOM.render(
   ),
   document.getElementById('app')
 );
-```
-
-#### .Provider
-
- 说明：
-
-* mapStateToProps - 处理state到props的合并
-* mapDispatchToProps - 用dispatch处理数据改变
-* React组件
-* Callback - 渲染完成会后的回调函数
-
- 例子：
+```
+***connect** 说明：
+  - mapStateToProps - 处理state到props的合并
+  - mapDispatchToProps - 用dispatch处理数据改变
+  - React组件
+  - Callback - 渲染完成会后的回调函数 例子：
 
 ```
 
@@ -260,13 +254,71 @@ export default connect(mapStateToProps, mapDispatchToProps)(Header);
 
 ```
 
-### .ToDoList
+## 中间件
 
- 进入demo目录
+* **logger中间件** `
+			<pre>
+import {
+  createStore,
+  applyMiddleware,
+} from '@ctsj/state/lib/state';
+import { createLoggerMiddleware } from '@ctsj/state/lib/middleware';
 
-```
+const store = createStore(
+  null,
+  {},
+  applyMiddleware(createLoggerMiddleware())
+);
+			</pre>
+		`
+* **saga中间件**和dva用法一致
+  - 引入 `
+					<pre>
+import {
+  createStore,
+  applyMiddleware,
+} from '@ctsj/state/lib/state';
+import { createSagaMiddleware } from '@ctsj/state/lib/middleware';
 
-npm install
-npm run startapp
-&#x6D4F;&#x89C8;&#x5668;&#x8F93;&#x5165;localhost:8000
-```
+const store = createStore(
+  null,
+  {},
+  applyMiddleware(createSagaMiddleware())
+);
+					</pre>
+				`
+  - Model `
+					<pre>
+export default {
+	namespace: 'todolist',
+	state:{
+		data: [],
+	},
+	effects: {
+		*fetchList(params.{call,all,put,select}){
+			...
+		}
+	},
+	reducers: {
+		receive(state, { payload }) {
+			return {
+				...state,
+				...payload,
+			};
+		},
+	},
+}
+					</pre>
+				`
+
+## 用Service自动生成mapStateToProps、mapDispatchToProps和Model
+
+* [具体请参开此链接](https://github.com/playerljc/CTSJ-DvaGenerator)
+
+## ToDoList
+
+进入demo目录
+
+1. npm install
+2. npm run startapp
+3. 浏览器输入localhost:8000
