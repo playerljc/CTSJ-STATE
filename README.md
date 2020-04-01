@@ -1,19 +1,19 @@
 # CTSJ-STATE
 
-* **一个简单的状态集管理(同时实现了dva数据流和logger中间件)*
+* 一个简单的状态集管理(同时实现了dva数据流和logger中间件)
 
 ## 简介
 
 * **把redux、react-redux、redux-logger和dva数据流结合起来的一个简版状态集**
-* **本数据集的特点是增加了同步的回调功能和根据Servive自动生成model和mapStateToProps、mapDispatchToProps和Model功能*
+* 本数据集的特点是增加了同步的回调功能和根据Servive自动生成model和mapStateToProps、mapDispatchToProps和Model功能
 
 ## 安装
 
-`
-<pre>
-	npm install @ctsj/state
-</pre>
-`
+
+```js
+npm install @ctsj/state
+```
+
 
 ## 目录
 
@@ -32,12 +32,14 @@
 
 ## 状态集本身
 
-***createStore** 说明：
+**createStore** 
+说明：
   - createStore(reducer,preloadedState)
     + reducer-和redux的reducer一致
-    + preloadedState-Store的初始化值 例子：
+    + preloadedState-Store的初始化值 
+例子：
 
-```
+```js
 
 import { createStore } from '@ctsj/state/lib/state';
 
@@ -56,10 +58,12 @@ function reducer(state,action) {
 
 const store = createStore(reducer, {a:1,b:2});
 ```
-***combineReducers** 说明：
-  - reducers- Object 例子：
+**combineReducers** 
+说明：
+  - reducers- Object 
+  - 例子：
 
-```
+```js
 
 reducer.jsx
 
@@ -178,7 +182,7 @@ const store = createStore(reducer, {
 
 ## React中使用
 
-***Provider** props：
+**Provider** props：
   - store - Store 例子：
 
 ```
@@ -192,8 +196,9 @@ ReactDOM.render(
   ),
   document.getElementById('app')
 );
-```
-***connect** 说明：
+```
+
+**connect** 说明：
   - mapStateToProps - 处理state到props的合并
   - mapDispatchToProps - 用dispatch处理数据改变
   - React组件
@@ -256,8 +261,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(Header);
 
 ## 中间件
 
-* **logger中间件** `
-			<pre>
+* **logger中间件** 
+```js
 import {
   createStore,
   applyMiddleware,
@@ -269,11 +274,11 @@ const store = createStore(
   {},
   applyMiddleware(createLoggerMiddleware())
 );
-			</pre>
-		`
+```
+		
 * **saga中间件**和dva用法一致
-  - 引入 `
-					<pre>
+  - 引入 
+```js
 import {
   createStore,
   applyMiddleware,
@@ -285,10 +290,10 @@ const store = createStore(
   {},
   applyMiddleware(createSagaMiddleware())
 );
-					</pre>
-				`
-  - Model `
-					<pre>
+```
+				
+  - Model 
+```js
 export default {
 	namespace: 'todolist',
 	state:{
@@ -308,8 +313,8 @@ export default {
 		},
 	},
 }
-					</pre>
-				`
+```
+				
 
 ## 用Service自动生成mapStateToProps、mapDispatchToProps和Model
 
