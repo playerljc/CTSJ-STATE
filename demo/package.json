@@ -1,6 +1,6 @@
 {
   "name": "ctsj-state-demo",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "ctsj-state-demo",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,8 +12,8 @@
   "license": "MIT",
   "keywords": [
     "CTSJ-UI",
-    "CTMobile",
-    "CTSJ-STATE",
+    "CtMobile",
+    "CtSJ-STATE",
     "PC",
     "webapp",
     "SPA",
@@ -39,12 +39,12 @@
     "@ctsj/build": "^1.0.7"
   },
   "dependencies": {
+    "@ctsj/state": "^2.0.2",
     "font-awesome": "^4.7.0",
-    "prop-types": "15.5.10",
-    "react": "15.6.1",
-    "react-dom": "15.6.1",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "react-loading": "^2.0.3",
-    "uuid": "^3.3.3",
-    "@ctsj/state": "^2.0.1"
+    "uuid": "^3.3.3"
   }
 }

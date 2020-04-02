@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/state",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "一个简单的状态集管理",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -30,8 +30,8 @@
     "eslint-plugin-markdown": "^1.0.0-beta.6",
     "eslint-plugin-react": "^7.0.1",
     "@ctsj/build": "^1.0.7",
-    "prop-types": "15.5.10",
-    "react": "15.6.1",
-    "react-dom": "15.6.1"
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   }
 }

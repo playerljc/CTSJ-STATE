@@ -1,4 +1,14 @@
-# 2.0.1
+# 2.0.2(react16.x)
+
+***
+
+2020/04/01
+
+* 加入Logger中间件
+* 加入Saga中间件
+* 加入ServiceGenerator
+
+# 2.0.1(react15.x)
 
 ***
 

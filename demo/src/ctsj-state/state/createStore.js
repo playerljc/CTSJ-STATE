@@ -6,7 +6,7 @@ import Immutable from '../util/immutable';
  */
 function trigger(action) {
   const { listeners } = this;
-  listeners.forEach(ins => {
+  listeners.forEach((ins) => {
     ins(action);
   });
 }
@@ -131,7 +131,7 @@ class Store {
 
   /**
    * dispatch
-   * @param action
+   * @param {Object | Function} - action
    */
   dispatch(action) {
     if (action instanceof Function) {

@@ -9,7 +9,7 @@ export default reducers =>
    *  @param {Object} - action
    *  @return {Function}
    */
-  (state, action) => {
+    (state, action) => {
     let data = state;
     for (const p in reducers) {
       if (!Object.hasOwnProperty(p)) {
