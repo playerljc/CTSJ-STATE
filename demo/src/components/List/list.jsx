@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ListItem from './listitem';
+import ListItem from '../ListItem/listitem';
 
 import './list.less';
 
@@ -21,14 +21,14 @@ class List extends React.PureComponent {
       <div className={`${selectorPrefix}-list`}>
         <div className={`${selectorPrefix}-list-header`}>
           <div className={`${selectorPrefix}-list-header-title`}>{title}</div>
-          <div className={`${selectorPrefix}-list-header-count`}>{curData.length}</div>
+          <div className={`${selectorPrefix}-list-header-count`}>
+            {curData.length}
+          </div>
         </div>
-        <ul className={`${selectorPrefix}-list-body`} >
-          {
-            curData.map((t) => {
-              return <ListItem key={t.id} {...t} />;
-            })
-          }
+        <ul className={`${selectorPrefix}-list-body`}>
+          {curData.map(t => {
+            return <ListItem key={t.id} {...t} />;
+          })}
         </ul>
       </div>
     );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from '@ctsj/state/lib/react';
+import ServiceRegister from '@ctsj/state/lib/middleware/saga/serviceregister';
 
 import './listitem.less';
 
@@ -34,13 +35,28 @@ class ListItem extends React.PureComponent {
     });
   }
 
+  refreshList() {
+    this.props.todolistFetchList({
+      ins: this,
+      success: () => {
+        console.log('AppFetchListSuccess');
+      },
+    });
+  }
+
   /**
    * onDelete
    */
   onDelete() {
-    const { id, onDelete } = this.props;
-    if (onDelete) {
-      onDelete(id);
+    const { id, todolistFetchDelete } = this.props;
+    if (todolistFetchDelete) {
+      todolistFetchDelete({
+        id,
+        ins: this,
+        success: () => {
+          this.refreshList();
+        },
+      });
     }
   }
 
@@ -48,10 +64,16 @@ class ListItem extends React.PureComponent {
    * onComplete
    */
   onComplete() {
-    const { type, id, onComplete } = this.props;
+    const { type, id, todolistFetchComplete } = this.props;
     if (type === 'run') {
-      if (onComplete) {
-        onComplete(id);
+      if (todolistFetchComplete) {
+        todolistFetchComplete({
+          id,
+          ins: this,
+          success: () => {
+            this.refreshList();
+          },
+        });
       }
     }
   }
@@ -70,15 +92,25 @@ class ListItem extends React.PureComponent {
    * onEditorBlur
    */
   onEditorBlur() {
-    const { id, onUpdate } = this.props;
+    const { id, todolistFetchUpdate } = this.props;
     const { value } = this.state;
-    this.setState({
-      editable: false,
-    }, () => {
-      if (onUpdate) {
-        onUpdate({ id, value });
+    this.setState(
+      {
+        editable: false,
+      },
+      () => {
+        if (todolistFetchUpdate) {
+          todolistFetchUpdate({
+            id,
+            value,
+            ins: this,
+            success: () => {
+              this.refreshList();
+            },
+          });
+        }
       }
-    });
+    );
   }
 
   /**
@@ -99,19 +131,19 @@ class ListItem extends React.PureComponent {
    */
   renderEditable() {
     const { editable = false, value } = this.state;
-    return editable ?
-      (<div className={`${selectorPrefix}-inner-editorable`}>
+    return editable ? (
+      <div className={`${selectorPrefix}-inner-editorable`}>
         <input
           value={value}
           onChange={this.onEditorChange}
           onBlur={this.onEditorBlur}
         />
-      </div>) :
-      (<div
-        className={`${selectorPrefix}-inner-value`}
-        onClick={this.onEditor}
-      >{value}
-      </div>);
+      </div>
+    ) : (
+      <div className={`${selectorPrefix}-inner-value`} onClick={this.onEditor}>
+        {value}
+      </div>
+    );
   }
 
   render() {
@@ -137,56 +169,16 @@ class ListItem extends React.PureComponent {
   }
 }
 
-/**
- * mapStateToProps
- * @param {Object} - state
- * @return {Object|Array}
- */
-const mapStateToProps = (state) => {
-  return state;
-};
+const mapStateToProps = state =>
+  ServiceRegister.mapStateToProps({
+    namespace: 'todolist',
+    state,
+  });
 
-/**
- * mapDispatchToProps
- * @param {Function} - dispatch
- * @return {Object}
- */
-const mapDispatchToProps = (dispatch) => {
-  return {
-    /**
-     * onDelete
-     * @param {Number} - id
-     */
-    onDelete: (id) => {
-      dispatch({
-        type: 'delete',
-        id,
-      });
-    },
-    /**
-     * onComplete
-     * @param {Number} - id
-     */
-    onComplete(id) {
-      dispatch({
-        type: 'complete',
-        id,
-      });
-    },
-    /**
-     * onUpdate
-     * @param {Number} - id
-     * @param {Number} - value
-     */
-    onUpdate({ id, value }) {
-      dispatch({
-        type: 'update',
-        id,
-        value,
-      });
-    },
-  };
-};
+const mapDispatchToProps = dispatch =>
+  ServiceRegister.mapDispatchToProps({
+    namespaces: ['todolist'],
+    dispatch,
+  });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListItem);
-

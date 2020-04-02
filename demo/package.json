@@ -1,8 +1,7 @@
 {
   "name": "ctsj-state-demo",
-  "version": "1.0.0",
+  "version": "2.0.2",
   "description": "ctsj-state-demo",
-  "main": "src/back/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "startapp": "ctbuild startapp",
@@ -37,12 +36,14 @@
     "eslint-plugin-markdown": "^1.0.0-beta.6",
     "eslint-plugin-react": "^7.0.1",
     "@babel/runtime": "^7.5.5",
-    "@ctsj/build": "^1.0.7",
-    "axios": "^0.19.0",
+    "@ctsj/build": "^1.0.7"
+  },
+  "dependencies": {
     "font-awesome": "^4.7.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-loading": "^2.0.3",
     "uuid": "^3.3.3"
   }
 }
