@@ -1,30 +1,42 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore, combineReducers } from '@ctsj/state/lib/state';
+import {
+  createStore,
+  /* combineReducers, */ applyMiddleware,
+} from '@ctsj/state/lib/state';
 import { Provider } from '@ctsj/state/lib/react';
-import { addTodo, updateTodo, completeTodo, deleteTodo } from './reducers';
-import App from './app';
+import { createLoggerMiddleware } from '@ctsj/state/lib/middleware';
 
-const reducer = combineReducers({
-  addTodo, updateTodo, completeTodo, deleteTodo,
+import ServiceRegister from '@ctsj/state/lib/middleware/saga/serviceregister';
+import * as Service from './service/service';
+
+import sage from './util/saga';
+import model from './model/model';
+import App from './components/App/app';
+
+ServiceRegister.initConfig({
+  todolist: Service,
 });
 
-const data = localStorage.getItem('ctsj-state-todolist');
-const store = createStore(reducer, {
-  data: data ? JSON.parse(data) : [],
-});
+// import * as reducers from './reducers';
+const storeData = localStorage.getItem('ctsj-state-todolist') || '[]';
 
-store.subscribe(() => {
-  const { data = [] } = store.getState();
-  localStorage.setItem('ctsj-state-todolist', JSON.stringify(data));
-});
-
-ReactDOM.render(
-  (
-    <Provider store={store}>
-      <App />
-    </Provider>
-  ),
-  document.getElementById('app')
+const store = createStore(
+  // combineReducers(reducers),
+  null,
+  {
+    todolist: {
+      fetchList: JSON.parse(storeData),
+    },
+  },
+  applyMiddleware(createLoggerMiddleware(), sage)
 );
 
+sage.model(model());
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('app')
+);

@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import Immutable from '../util/immutable';
-import { ProviderContext } from './Context';
 
 /**
  * createConnect
@@ -13,8 +14,8 @@ export default (mapStateToProps, mapDispatchToProps) => {
    * ConnectHOC
    * @param {ReactElement} - Component
    */
-  return (Component) => {
-    return class extends React.Component {
+  return Component => {
+    class WrapClass extends React.Component {
       constructor(props) {
         super(props);
         this.state = {
@@ -23,11 +24,26 @@ export default (mapStateToProps, mapDispatchToProps) => {
       }
 
       componentDidMount() {
-        this.unsubscribe = this.store.subscribe((action) => {
-          const state = this.store.getState();
-          this.setState({
+        const {
+          context: { store },
+        } = this;
+        this.unsubscribe = store.subscribe(this.onSubscribe);
+      }
+
+      componentWillUnmount() {
+        this.unsubscribe();
+      }
+
+      onSubscribe = action => {
+        const {
+          context: { store },
+        } = this;
+        const state = store.getState();
+        this.setState(
+          {
             state,
-          }, () => {
+          },
+          () => {
             // 如果是当前实力进行的数据更改才会调用success
             const { success, ins, ...other } = action;
             // console.log('redux进行了数据改变的通知');
@@ -39,13 +55,9 @@ export default (mapStateToProps, mapDispatchToProps) => {
                 success.call(ins, Immutable.cloneDeep(other));
               }
             }
-          });
-        });
-      }
-
-      componentWillUnmount() {
-        this.unsubscribe();
-      }
+          }
+        );
+      };
 
       /**
        * getInstance
@@ -56,33 +68,38 @@ export default (mapStateToProps, mapDispatchToProps) => {
       }
 
       render() {
+        const { store } = this.context;
+
+        const state = store.getState();
+
+        let dispatch = {};
+        if (mapDispatchToProps) {
+          dispatch = mapDispatchToProps(store.dispatch.bind(store));
+        }
+
+        let props = {};
+        if (mapStateToProps) {
+          props = mapStateToProps(state);
+        }
+
         return (
-          <ProviderContext.Consumer>{({ store }) => {
-            if (!this.store) this.store = store;
-            const state = this.state.state ? this.state.state : this.store.getState();
-
-            let dispatch = {};
-            if (mapDispatchToProps) {
-              dispatch = mapDispatchToProps(this.store.dispatch.bind(this.store));
-            }
-
-            let props = {};
-            if (mapStateToProps) {
-              props = mapStateToProps(Immutable.cloneDeep(state));
-            }
-
-            return (
-              <Component
-                ref={ins => this.ins = ins}
-                {...props}
-                {...this.props}
-                {...dispatch}
-              />
-            );
-          }}
-          </ProviderContext.Consumer>
+          <Component
+            ref={ins => {
+              this.ins = ins;
+            }}
+            {...this.props}
+            {...props}
+            {...dispatch}
+            dispatch={store.dispatch}
+          />
         );
       }
+    }
+
+    WrapClass.contextTypes = {
+      store: PropTypes.object,
     };
+
+    return WrapClass;
   };
 };

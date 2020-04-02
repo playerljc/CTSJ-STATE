@@ -6,7 +6,7 @@ import Immutable from '../util/immutable';
  */
 function trigger(action) {
   const { listeners } = this;
-  listeners.forEach((ins) => {
+  listeners.forEach(ins => {
     ins(action);
   });
 }
@@ -21,10 +21,16 @@ class Store {
    * constrcutor
    * @param {Function} - reducer
    * @param {Object | Array} - preloadedState
+   * @param {Array} - middlewares
    */
-  constructor(reducer, preloadedState = {}) {
-    this.reducer = reducer;
+  constructor(reducer, preloadedState = {}, middlewares = []) {
+    this.reducer = reducer || (state => state);
     this.state = Object.assign({}, preloadedState);
+    this.middlewares = middlewares || [];
+    // 给每一个middleware赋值store
+    this.middlewares.forEach(m => {
+      m.store = this;
+    });
     this.listeners = [];
   }
 
@@ -33,19 +39,124 @@ class Store {
    * @return {Object}
    */
   getState() {
-    return Immutable.cloneDeep(this.state);
+    return this.state;
+  }
+
+  /**
+   * runBeforeMiddlewares
+   * @param action
+   * @return {Promise<state>}
+   */
+  runBeforeMiddlewares(action) {
+    return new Promise((resolveParent, rejectParent) => {
+      let index = this.middlewares.length - 1;
+      // 整个store的state
+      let cloneState = Immutable.cloneDeep(this.state);
+
+      const next = () =>
+        new Promise((resolve, reject) => {
+          if (index < 0) {
+            resolve();
+          } else {
+            const middleware = this.middlewares[index--];
+            middleware
+              .before({
+                state: cloneState,
+                action,
+              })
+              .then(state => {
+                cloneState = state;
+                next().then(() => {
+                  resolve();
+                });
+              })
+              .catch(error => {
+                reject(error);
+              });
+          }
+        });
+
+      next()
+        .then(() => {
+          resolveParent(cloneState);
+        })
+        .catch(error => {
+          rejectParent(error);
+        });
+    });
+  }
+
+  /**
+   * runAfterMiddlewares
+   * @param action
+   * @return {Promise<state>}
+   */
+  runAfterMiddlewares(action) {
+    return new Promise((resolveParent, rejectParent) => {
+      let index = 0;
+      let cloneState = Immutable.cloneDeep(this.state);
+
+      const next = () =>
+        new Promise((resolve, reject) => {
+          if (index >= this.middlewares.length) {
+            resolve();
+          } else {
+            const middleware = this.middlewares[index++];
+            middleware
+              .after({
+                state: cloneState,
+                action,
+              })
+              .then(state => {
+                cloneState = state;
+                next().then(() => {
+                  resolve();
+                });
+              })
+              .catch(error => {
+                reject(error);
+              });
+          }
+        });
+
+      next()
+        .then(() => {
+          resolveParent(cloneState);
+        })
+        .catch(error => {
+          rejectParent(error);
+        });
+    });
   }
 
   /**
    * dispatch
-   * @param {Object | Function} - action
+   * @param action
    */
   dispatch(action) {
     if (action instanceof Function) {
       action(this.dispatch.bind(this));
+    } else if (this.middlewares.length) {
+      // 如果有middlewares
+      // before
+      this.runBeforeMiddlewares(action).then(beforeCloneState => {
+        this.state = beforeCloneState;
+        // before的时候去掉action中的success
+        const { success, ...filterAction } = action;
+        trigger.call(this, filterAction);
+
+        // detail
+        this.state = this.reducer(Immutable.cloneDeep(this.state), action);
+
+        // after
+        this.runAfterMiddlewares(action).then(afterCloneState => {
+          this.state = afterCloneState;
+          trigger.call(this, action);
+        });
+      });
     } else {
-      const state = this.reducer(Immutable.cloneDeep(this.state), action);
-      this.state = Immutable.cloneDeep(state);
+      // 如果没有middlewares
+      this.state = this.reducer(Immutable.cloneDeep(this.state), action);
       trigger.call(this, action);
     }
   }
@@ -69,9 +180,9 @@ class Store {
 /**
  * createStore
  * @param {Function} - reducer
- * @param {Object | Array} preloadedState
+ * @param {Object | Array} - preloadedState
+ * @param {Array} - middlewares
  * @return {Store}
  */
-export default function (reducer, preloadedState) {
-  return new Store(reducer, preloadedState);
-}
+export default (reducer, preloadedState, middlewares) =>
+  new Store(reducer, preloadedState, middlewares);

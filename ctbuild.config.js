@@ -1,5 +1,5 @@
 module.exports = {
-  getConfig(config) {
-    return {};
+  getConfig() {
+
   },
 };

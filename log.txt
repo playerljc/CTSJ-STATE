@@ -1,0 +1,34 @@
+.middleware
+ .saga
+  .加入all - ok
+  .加入race - ok
+  .加入take - 暂不考虑
+  .subscriptions - ok
+  .loading - ok
+  .动态加入和修改model的时候store的数据 - 暂不考虑
+  .effects中call别的modal中的effect和reduce - 暂不考虑
+  .service注册中心
+   .根据接口生成model
+    .post - 新增
+     code
+     message
+     用接口名调用reduces
+
+    .delete - 删除
+     code
+     message
+     用接口名调用reduces
+
+    .put - 修改
+     code
+     message
+     用接口名调用reduces
+
+    .get - 查询
+     .list - 列表
+      .normal - 普通
+      .pagin - 分页
+     .info - 详情
+     用接口名调用reduces
+
+  .根据接口生成mapDispatchToProps
