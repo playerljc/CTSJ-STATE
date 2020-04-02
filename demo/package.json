@@ -39,6 +39,7 @@
     "@ctsj/build": "^1.0.7"
   },
   "dependencies": {
+    "@ctsj/state": "^2.0.2",
     "font-awesome": "^4.7.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
