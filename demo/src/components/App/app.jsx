@@ -50,7 +50,6 @@ const mapStateToProps = state => ServiceRegister.mapStateToProps({
   state,
 });
 
-
 const mapDispatchToProps = dispatch =>
   ServiceRegister.mapDispatchToProps({
     namespaces: ['todolist'],
