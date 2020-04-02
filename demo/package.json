@@ -45,6 +45,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-loading": "^2.0.3",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "@ctsj/state": "^2.0.1"
   }
 }
