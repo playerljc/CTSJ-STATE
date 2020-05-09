@@ -30,7 +30,7 @@ export default {
   mapStateToProps({ namespace, state }) {
     return {
       [namespace]: state[namespace],
-      loading: state.loading.global,
+      loading: state.loading/*.global*/,
     };
   },
   /**
@@ -55,16 +55,17 @@ export default {
       const Service = Config[namespace];
 
       Object.keys(Service).forEach(key => {
-        // methodName是namespace + 接口方法名首字母大写
-        // 例子 namespace是todolist Service中有fetchList接口
-        // 则方法名为todolistFetchList
-        const methodName = `${namespace}${key
-          .charAt(0)
-          .toUpperCase()}${key.substring(1)}`;
-        const type = `${namespace}/${key}`;
-        // params必须是对象且只有一个对象
-        mapDispatchToProps[methodName] = params =>
-          dispatch(Object.assign({ type }, params));
+        if(key !== 'default') {
+          // methodName是namespace + 接口方法名首字母大写
+          // 例子 namespace是todolist Service中有fetchList接口
+          // 则方法名为todolistFetchList
+          const methodName = `${namespace}${key
+            .charAt(0)
+            .toUpperCase()}${key.substring(1)}`;
+          const type = `${namespace}/${key}`;
+          // params必须是对象且只有一个对象
+          mapDispatchToProps[methodName] = params => dispatch(Object.assign({ type }, params));
+        }
       });
     });
 
