@@ -21,17 +21,25 @@ export default {
   },
   /**
    * mapStateToProps - 自动生成mapStateToProps
-   * @param {String} - namespace
+   * @param {Array} - namespaces
    * @param {Object} - state 数据流的数据
    * @return {Object} - mapStateToProps的映射
    * 映射namespace到Props
    * 映射loading到Props
    */
-  mapStateToProps({ namespace, state }) {
-    return {
-      [namespace]: state[namespace],
+  mapStateToProps({ namespaces, state }) {
+    const props = {
+      // [namespace]: state[namespace],
       loading: state.loading/*.global*/,
     };
+
+    if(namespaces && namespaces.length) {
+      namespaces.forEach(namespace => {
+        props[namespace] = state[namespace];
+      })
+    }
+
+    return props;
   },
   /**
    * mapDispatchToProps - 自动生成mapDispatchToProps
