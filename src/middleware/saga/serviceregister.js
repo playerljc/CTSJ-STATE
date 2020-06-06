@@ -124,11 +124,20 @@ export default {
         // success是回调函数
         model.effects[key] = function*(params, { call, put }) {
           const response = yield call(Service[key], params);
+
+          // console.log('CTSJ-STATE----',response);
           // Service中的默认导出必须有的键
           // codeKey为状态域
           // codeSuccessKey为状态域中成功标识
           // dataKey为数据域
           const { codeKey, codeSuccessKey, dataKey } = Service.default;
+
+          // console.log('CTSJ-STATE----',codeKey, codeSuccessKey, dataKey);
+
+          // console.log({ [key]: response[dataKey] });
+
+          // console.log(response[codeKey] === codeSuccessKey);
+
           if (response[codeKey] === codeSuccessKey) {
             // 向数据流里放入Service的方法名为key,response[dataKey]为值的数据
             yield put({
