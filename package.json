@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/state",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "一个简单的状态集管理",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -19,6 +19,9 @@
     "lib"
   ],
   "homepage": "https://github.com/playerljc/CTSJ-STATE#readme",
+  "dependencies": {
+    "lodash": "^4.17.15"
+  },
   "devDependencies": {
     "babel-eslint": "^8.1.2",
     "eslint": "^4.14.0",
