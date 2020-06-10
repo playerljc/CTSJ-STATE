@@ -38,14 +38,14 @@ export default (mapStateToProps, mapDispatchToProps) =>
         // store的数据
         const state = store.getState();
         // 之前state的数据
-        const cloneState = JSON.parse(JSON.stringify(this.state.state || {}));
+        // const cloneState = JSON.parse(JSON.stringify(this.state.state || {}));
         this.setState(
           {
-            state: _.mergeWith(cloneState, state, (objValue, srcValue) => {
+            state/*: _.mergeWith(cloneState, state, (objValue, srcValue) => {
               if (_.isArray(srcValue)) {
                 return srcValue;
               }
-            }),
+            }),*/
           },
           () => {
             // 如果是当前实力进行的数据更改才会调用success

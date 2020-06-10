@@ -74,7 +74,7 @@ class Saga {
         call: Call,
         all: All,
         race: Race,
-        select: Select(Immutable.cloneDeep(state)),
+        select: Select(state),
         put: Put({
           state: state[model.namespace],
           params,

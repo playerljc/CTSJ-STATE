@@ -51,7 +51,7 @@ class Store {
     return new Promise((resolveParent, rejectParent) => {
       let index = this.middlewares.length - 1;
       // 整个store的state
-      let cloneState = Immutable.cloneDeep(this.state);
+      let cloneState = this.state;
 
       const next = () =>
         new Promise((resolve, reject) => {
@@ -94,7 +94,7 @@ class Store {
   runAfterMiddlewares(action) {
     return new Promise((resolveParent, rejectParent) => {
       let index = 0;
-      let cloneState = Immutable.cloneDeep(this.state);
+      let cloneState = this.state;
 
       const next = () =>
         new Promise((resolve, reject) => {
@@ -146,7 +146,7 @@ class Store {
         trigger.call(this, filterAction);
 
         // detail
-        this.state = this.reducer(Immutable.cloneDeep(this.state), action);
+        this.state = this.reducer(this.state, action);
 
         // after
         this.runAfterMiddlewares(action).then(afterCloneState => {
@@ -156,7 +156,7 @@ class Store {
       });
     } else {
       // 如果没有middlewares
-      this.state = this.reducer(Immutable.cloneDeep(this.state), action);
+      this.state = this.reducer(this.state, action);
       trigger.call(this, action);
     }
   }
