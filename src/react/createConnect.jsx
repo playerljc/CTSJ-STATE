@@ -41,7 +41,11 @@ export default (mapStateToProps, mapDispatchToProps) =>
         const cloneState = JSON.parse(JSON.stringify(this.state.state || {}));
         this.setState(
           {
-            state: _.merge(cloneState, state),
+            state: _.mergeWith(cloneState, state, (objValue, srcValue) => {
+              if (_.isArray(srcValue)) {
+                return srcValue;
+              }
+            }),
           },
           () => {
             // 如果是当前实力进行的数据更改才会调用success
@@ -83,8 +87,6 @@ export default (mapStateToProps, mapDispatchToProps) =>
               if (mapStateToProps) {
                 props = mapStateToProps(state);
               }
-
-              console.log(this.state);
 
               return (
                 <Component
