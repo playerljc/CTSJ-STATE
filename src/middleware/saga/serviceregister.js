@@ -1,3 +1,6 @@
+import { connect as createConnect } from '../../react';
+
+let sage;
 let Config;
 
 /**
@@ -19,6 +22,9 @@ export default {
   initConfig(config) {
     Config = config;
   },
+  setSage(ins) {
+    sage = ins;
+  },
   /**
    * mapStateToProps - 自动生成mapStateToProps
    * @param {Array} - namespaces
@@ -30,13 +36,13 @@ export default {
   mapStateToProps({ namespaces, state }) {
     const props = {
       // [namespace]: state[namespace],
-      loading: state.loading/*.global*/,
+      loading: state.loading /*.global*/,
     };
 
-    if(namespaces && namespaces.length) {
-      namespaces.forEach(namespace => {
+    if (namespaces && namespaces.length) {
+      namespaces.forEach((namespace) => {
         props[namespace] = state[namespace];
-      })
+      });
     }
 
     return props;
@@ -59,20 +65,18 @@ export default {
       keys = namespaces;
     }
 
-    keys.forEach(namespace => {
+    keys.forEach((namespace) => {
       const Service = Config[namespace];
 
-      Object.keys(Service).forEach(key => {
-        if(key !== 'default') {
+      Object.keys(Service).forEach((key) => {
+        if (key !== 'default') {
           // methodName是namespace + 接口方法名首字母大写
           // 例子 namespace是todolist Service中有fetchList接口
           // 则方法名为todolistFetchList
-          const methodName = `${namespace}${key
-            .charAt(0)
-            .toUpperCase()}${key.substring(1)}`;
+          const methodName = `${namespace}${key.charAt(0).toUpperCase()}${key.substring(1)}`;
           const type = `${namespace}/${key}`;
           // params必须是对象且只有一个对象
-          mapDispatchToProps[methodName] = params => dispatch(Object.assign({ type }, params));
+          mapDispatchToProps[methodName] = (params) => dispatch(Object.assign({ type }, params));
         }
       });
     });
@@ -100,12 +104,26 @@ export default {
     // service的实例
     const Service = Config[namespace];
 
+    const keys = Object.keys(Service);
+
+    const defaultState = {};
+    
+    keys.forEach(key => {
+      if(key !== 'default') {
+        defaultState[key] = Service[key].defaultResult();
+      }
+    });
+
     // 模型
     const model = {
       // namespace
       namespace,
       // effects
       effects: {},
+      state: Object.assign({}, defaultState),
+      getDefaultState: () => {
+        return Object.assign({}, defaultState)
+      },
       // reducers
       reducers: {
         receive(state, { payload }) {
@@ -118,12 +136,12 @@ export default {
     };
 
     // 所有除了default
-    Object.keys(Service).forEach(key => {
+    keys.forEach((key) => {
       if (key !== 'default') {
         // params是调用mapDispatchToProps的参数
         // success是回调函数
-        model.effects[key] = function*(params, { call, put }) {
-          const response = yield call(Service[key], params);
+        model.effects[key] = function* (params, { call, put }) {
+          const response = yield call(Service[key].call, params);
 
           // console.log('CTSJ-STATE----',response);
           // Service中的默认导出必须有的键
@@ -150,5 +168,30 @@ export default {
     });
 
     return model;
+  },
+
+  /**
+   * 加入自动清除的connect
+   * @param serviceName
+   * @return {function(*=, *=): function(*=): *}
+   */
+  connect(serviceNames) {
+    const clearGroup = serviceNames.map((serviceName) => {
+      const model = sage.getModel(serviceName);
+      const defaultState = model && 'getDefaultState' in model ? model.getDefaultState() : {};
+      return {
+        type: `${serviceName}/receive`,
+        defaultState,
+      };
+    });
+
+    return (mapStateToProps, mapDispatchToProps) => {
+      return (Component) => {
+        return createConnect(mapStateToProps, mapDispatchToProps)(Component, {
+          isClear: true,
+          clearGroup,
+        });
+      };
+    };
   },
 };

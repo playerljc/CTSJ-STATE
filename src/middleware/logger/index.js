@@ -6,6 +6,10 @@ const logger = console;
  * @classdesc store的state日志的记录
  */
 class Logger {
+  setStore(store) {
+    this.store = store;
+  }
+
   /**
    * before
    * @param state
