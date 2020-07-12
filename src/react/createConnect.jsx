@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 
 import { ProviderContext } from './Context';
 import Immutable from '../util/immutable';
@@ -14,9 +13,18 @@ export default (mapStateToProps, mapDispatchToProps) =>
   /**
    * ConnectHOC
    * @param {ReactElement} - Component
+   * @param {
+   *   isClear: boolean - 是否清除页面用到的store数据
+   *   clearGroups: [
+   *     {
+   *        type: string - 清除页面store数据dispatch的type
+   *        defaultState: object - 清除页面store数据的assign
+   *     }
+   *   ]
+   * }
    */
-  (Component) =>
-    class extends React.Component {
+  (Component, Config) => {
+    class CreateConnect extends React.Component {
       constructor(props) {
         super(props);
         this.state = {
@@ -30,6 +38,16 @@ export default (mapStateToProps, mapDispatchToProps) =>
       }
 
       componentWillUnmount() {
+        // 加入清理页面用到的store的操作
+        if (Config && Config.isClear) {
+          const { clearGroup = [] } = Config;
+          clearGroup.forEach(({ type = '', defaultState = {} }) => {
+            this.store.dispatch({
+              type,
+              ...(defaultState || {}),
+            });
+          });
+        }
         this.unsubscribe();
       }
 
@@ -38,14 +56,9 @@ export default (mapStateToProps, mapDispatchToProps) =>
         // store的数据
         const state = store.getState();
         // 之前state的数据
-        // const cloneState = JSON.parse(JSON.stringify(this.state.state || {}));
         this.setState(
           {
-            state/*: _.mergeWith(cloneState, state, (objValue, srcValue) => {
-              if (_.isArray(srcValue)) {
-                return srcValue;
-              }
-            }),*/
+            state,
           },
           () => {
             // 如果是当前实力进行的数据更改才会调用success
@@ -55,7 +68,7 @@ export default (mapStateToProps, mapDispatchToProps) =>
             // console.log(this.ins);
             // console.log(this.ins === ins);
             if (success && ins) {
-              if (this.ins === ins) {
+              if (/* this.ins */ this.ref.current === ins) {
                 success.call(ins, Immutable.cloneDeep(other));
               }
             }
@@ -63,13 +76,13 @@ export default (mapStateToProps, mapDispatchToProps) =>
         );
       };
 
-      /**
-       * getInstance
-       * @return {ReactElement}
-       */
-      getInstance() {
-        return this.ins;
-      }
+      // /**
+      //  * getInstance
+      //  * @return {ReactElement}
+      //  */
+      // getInstance() {
+      //   return this.ins;
+      // }
 
       render() {
         return (
@@ -88,19 +101,26 @@ export default (mapStateToProps, mapDispatchToProps) =>
                 props = mapStateToProps(state);
               }
 
+              this.ref = this.props.forwardedRef || React.createRef();
               return (
                 <Component
-                  ref={(ins) => {
-                    this.ins = ins;
-                  }}
+                  // ref={(ins) => {
+                  //   this.ins = ins;
+                  // }}
+                  ref={this.ref}
                   {...this.props}
                   {...props}
                   {...dispatch}
-                  dispatch={store.dispatch}
+                  dispatch={store.dispatch.bind(store)}
                 />
               );
             }}
           </ProviderContext.Consumer>
         );
       }
-    };
+    }
+
+    return React.forwardRef((props, ref) => {
+      return <CreateConnect {...props} forwardedRef={ref} />;
+    });
+  };

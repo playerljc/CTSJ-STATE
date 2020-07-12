@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/state",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "一个简单的状态集管理",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/playerljc/CTSJ-STATE/issues"
   },
-  "files":[
+  "files": [
     "lib"
   ],
   "homepage": "https://github.com/playerljc/CTSJ-STATE#readme",

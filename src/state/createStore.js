@@ -1,5 +1,3 @@
-import Immutable from '../util/immutable';
-
 /**
  * trigger
  * @access private
@@ -24,12 +22,12 @@ class Store {
    * @param {Array} - middlewares
    */
   constructor(reducer, preloadedState = {}, middlewares = []) {
-    this.reducer = reducer || (state => state);
+    this.reducer = reducer || ((state) => state);
     this.state = Object.assign({}, preloadedState);
     this.middlewares = middlewares || [];
     // 给每一个middleware赋值store
-    this.middlewares.forEach(m => {
-      m.store = this;
+    this.middlewares.forEach((m) => {
+      m.setStore(this);
     });
     this.listeners = [];
   }
@@ -50,8 +48,6 @@ class Store {
   runBeforeMiddlewares(action) {
     return new Promise((resolveParent, rejectParent) => {
       let index = this.middlewares.length - 1;
-      // 整个store的state
-      let cloneState = this.state;
 
       const next = () =>
         new Promise((resolve, reject) => {
@@ -61,16 +57,16 @@ class Store {
             const middleware = this.middlewares[index--];
             middleware
               .before({
-                state: cloneState,
+                state: this.state,
                 action,
               })
-              .then(state => {
-                cloneState = state;
+              .then((/* state */) => {
+                // cloneState = state;
                 next().then(() => {
                   resolve();
                 });
               })
-              .catch(error => {
+              .catch((error) => {
                 reject(error);
               });
           }
@@ -78,9 +74,9 @@ class Store {
 
       next()
         .then(() => {
-          resolveParent(cloneState);
+          resolveParent();
         })
-        .catch(error => {
+        .catch((error) => {
           rejectParent(error);
         });
     });
@@ -94,8 +90,6 @@ class Store {
   runAfterMiddlewares(action) {
     return new Promise((resolveParent, rejectParent) => {
       let index = 0;
-      let cloneState = this.state;
-
       const next = () =>
         new Promise((resolve, reject) => {
           if (index >= this.middlewares.length) {
@@ -104,16 +98,15 @@ class Store {
             const middleware = this.middlewares[index++];
             middleware
               .after({
-                state: cloneState,
+                state: this.state,
                 action,
               })
-              .then(state => {
-                cloneState = state;
+              .then(() => {
                 next().then(() => {
                   resolve();
                 });
               })
-              .catch(error => {
+              .catch((error) => {
                 reject(error);
               });
           }
@@ -121,9 +114,9 @@ class Store {
 
       next()
         .then(() => {
-          resolveParent(cloneState);
+          resolveParent();
         })
-        .catch(error => {
+        .catch((error) => {
           rejectParent(error);
         });
     });
@@ -139,8 +132,7 @@ class Store {
     } else if (this.middlewares.length) {
       // 如果有middlewares
       // before
-      this.runBeforeMiddlewares(action).then(beforeCloneState => {
-        this.state = beforeCloneState;
+      this.runBeforeMiddlewares(action).then(() => {
         // before的时候去掉action中的success
         const { success, ...filterAction } = action;
         trigger.call(this, filterAction);
@@ -149,8 +141,7 @@ class Store {
         this.state = this.reducer(this.state, action);
 
         // after
-        this.runAfterMiddlewares(action).then(afterCloneState => {
-          this.state = afterCloneState;
+        this.runAfterMiddlewares(action).then(() => {
           trigger.call(this, action);
         });
       });
