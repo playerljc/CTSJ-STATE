@@ -5,7 +5,7 @@ import { ProviderContext } from './Context';
 /**
  * Provider
  * @class Provider
- * @classdesc Provider
+ * @classdesc 一个Store的最外层容器 提供store实例
  */
 class Provider extends React.Component {
   render() {

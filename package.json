@@ -19,9 +19,6 @@
     "lib"
   ],
   "homepage": "https://github.com/playerljc/CTSJ-STATE#readme",
-  "dependencies": {
-    "lodash": "^4.17.15"
-  },
   "devDependencies": {
     "babel-eslint": "^8.1.2",
     "eslint": "^4.14.0",

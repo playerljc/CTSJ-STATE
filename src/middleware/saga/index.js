@@ -8,14 +8,29 @@ import History from './history';
 /**
  * Saga
  * @class Saga
- * @classdesc Saga
+ * @classdesc Saga 提供模型和对模型处理的中间件
  */
 class Saga {
   constructor() {
+    // 存放所有模型
+    // 一个模型的结构如下
+    // {
+    //   namespace
+    //   {
+    //      namespace: String
+    //      effects: Object
+    //      state: Object
+    //      reducers: Object
+    //   }
+    // }
     this.models = new Map();
     this.history = History;
   }
 
+  /**
+   * setStore - 设置store
+   * @param store
+   */
   setStore(store) {
     this.store = store;
     if (!this.store.state.loading) {
@@ -222,6 +237,10 @@ class Saga {
     this.initSubscriptions(model);
   }
 
+  /**
+   * isGlobalLoading
+   * @return {boolean}
+   */
   isGlobalLoading(/*model*/) {
     const { loading } = this.store.state;
 
@@ -260,12 +279,13 @@ class Saga {
     return new Promise((resolve) => {
       const { type } = action;
 
+      // 根据type获取namespace和effect
       const [namespace, effect] = type.split('/');
 
       // 根据命名空间获取model
       const model = this.models.get(namespace);
       if (model) {
-        // 获取effects的g
+        // 获取effects的g g是一个生成器函数或者是一个reducer
         const g = model.effects[effect];
         // 如果是effect
         if (g) {
@@ -301,14 +321,16 @@ class Saga {
    */
   after({ state, action }) {
     return new Promise((resolve) => {
+      // 类型，实例，和回调
       const { type, ins, success, ...params } = action;
 
+      // 根据type获取namespace和effect
       const [namespace, effect] = type.split('/');
 
       // 根据命名空间获取model
       const model = this.models.get(namespace);
       if (model) {
-        // 获取effects的g
+        // 获取effects的g g是一个生成器函数
         const g = model.effects[effect];
 
         // 如果是effect
@@ -319,7 +341,7 @@ class Saga {
             state[namespace] = model.state;
 
             state.loading[type] = false;
-            state.loading.global = this.isGlobalLoading(/*model*/);
+            state.loading.global = this.isGlobalLoading(/* model */);
             // console.log('after', 'effect', type, state.loading[type]);
             // console.log('after', 'effect', 'global', state.loading.global);
 
