@@ -11,7 +11,7 @@ import Immutable from '../util/immutable';
  */
 export default (mapStateToProps, mapDispatchToProps) =>
   /**
-   * ConnectHOC
+   * ConnectHOC - 一个提供store处理的工厂类
    * @param {ReactElement} - Component
    * @param {
    *   isClear: boolean - 是否清除页面用到的store数据

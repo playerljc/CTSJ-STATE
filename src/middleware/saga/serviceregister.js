@@ -36,7 +36,7 @@ export default {
   mapStateToProps({ namespaces, state }) {
     const props = {
       // [namespace]: state[namespace],
-      loading: state.loading /*.global*/,
+      loading: state.loading /* .global */,
     };
 
     if (namespaces && namespaces.length) {
@@ -107,9 +107,9 @@ export default {
     const keys = Object.keys(Service);
 
     const defaultState = {};
-    
+
     keys.forEach(key => {
-      if(key !== 'default') {
+      if (key !== 'default') {
         defaultState[key] = Service[key].defaultResult();
       }
     });
@@ -122,7 +122,7 @@ export default {
       effects: {},
       state: Object.assign({}, defaultState),
       getDefaultState: () => {
-        return Object.assign({}, defaultState)
+        return Object.assign({}, defaultState);
       },
       // reducers
       reducers: {
