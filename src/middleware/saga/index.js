@@ -24,6 +24,7 @@ class Saga {
     //   }
     // }
     this.models = new Map();
+
     this.history = History;
   }
 
@@ -49,9 +50,13 @@ class Saga {
    */
   model(model) {
     if (!model) return false;
+
     this.clearUnSubscriptions(model);
+
     this.models.set(model.namespace, model);
+
     this.init(model);
+
     return true;
   }
 
@@ -61,9 +66,12 @@ class Saga {
    */
   unmodel(namespace) {
     const model = this.models.get(namespace);
+
     if (model) {
       this.clearUnSubscriptions(model);
+
       this.models.delete(namespace);
+
       delete this.store.state[namespace];
     }
   }
@@ -95,22 +103,24 @@ class Saga {
   }
 
   /**
-   * run - 运行generator
+   * run - 运行generator(迭代model的effects)
    * @param g - 生成器函数类
-   * @param state - store的state
+   * @param state - store的state (dispatch调用则是全局，如果在effects中使用put调用则是model中的state)
    * @param params - action的参数
    * @param model - 模型
    */
   run({ g, state, params, model }) {
     return new Promise((resolve, reject) => {
-      // 获取指针
+      // 生成器函数
       const generator = g(params, {
         call: Call,
         all: All,
         race: Race,
-        select: Select(state),
+        // 这块应该传入所有model的state数据，而不是store的state数据
+        select: Select(this /* state */),
         put: Put({
           // state: state[model.namespace],
+          // 全局的store
           store: this.store,
           params,
           model,
@@ -141,7 +151,7 @@ class Saga {
           }
 
           /**
-           * 拿一个
+           * 拿一个(迭代)
            * call
            * put
            * select
@@ -210,14 +220,19 @@ class Saga {
 
   /**
    * init - 初始化所有model的state数据到store中
-   * @param model
+   * @param model - 一个model
    */
   init(model) {
     const { namespace, state } = model;
 
+    // model中所有effect的loading值
     const modelEffectsLoading = {};
+
     const effectsKeys = Object.keys(model.effects);
+
+    // 迭代一个model中的所有effect
     effectsKeys.forEach((k) => {
+      // key -> namespace/effect的名字
       modelEffectsLoading[`${namespace}/${k}`] = false;
     });
 
@@ -227,6 +242,7 @@ class Saga {
 
     Object.assign(this.store.state.loading, modelEffectsLoading);
     // this.store.state.loading = modelEffectsLoading;
+    // 在全局store中初始化model的数据
     this.store.state[namespace] =
       [namespace] in this.store.state ? this.store.state[namespace] : state;
     // Object.assign(this.store.state, {
@@ -244,7 +260,7 @@ class Saga {
   isGlobalLoading(/*model*/) {
     const { loading } = this.store.state;
 
-    return Array.from(this.models).some(([namespace,model]) => {
+    return Array.from(this.models).some(([namespace, model]) => {
       // const { namespace } = model;
       return Array.from(Object.keys(model.effects)).some((key) => {
         const curType = `${namespace}/${key}`;
@@ -270,13 +286,14 @@ class Saga {
   }
 
   /**
-   * before
+   * before - saga中间件的before方法
    * @param state - store的数据
-   * @param action
+   * @param action - 事务
    * @return Promise
    */
   before({ state, action }) {
     return new Promise((resolve) => {
+      // 获取action中的type
       const { type } = action;
 
       // 根据type获取namespace和effect
@@ -284,11 +301,15 @@ class Saga {
 
       // 根据命名空间获取model
       const model = this.models.get(namespace);
+
+      // 如果存在model
       if (model) {
         // 获取effects的g g是一个生成器函数或者是一个reducer
         const g = model.effects[effect];
+
         // 如果是effect
         if (g) {
+          // saga的before中修改了state的loading
           state.loading[type] = true;
           state.loading.global = true;
 
@@ -329,6 +350,7 @@ class Saga {
 
       // 根据命名空间获取model
       const model = this.models.get(namespace);
+
       if (model) {
         // 获取effects的g g是一个生成器函数
         const g = model.effects[effect];
@@ -338,9 +360,12 @@ class Saga {
           // 迭代model的effects
           this.run({ g, state, params, model }).then(() => {
             // model的返回
-            state[namespace] = model.state;
-
+            // TODO: 将在模型中改变的state同步到全局store的state中
+            // loading变成false
             state.loading[type] = false;
+
+            // 将在模型中改变的state同步到全局store的state中
+            state[namespace] = model.state;
             state.loading.global = this.isGlobalLoading(/* model */);
             // console.log('after', 'effect', type, state.loading[type]);
             // console.log('after', 'effect', 'global', state.loading.global);
@@ -354,9 +379,13 @@ class Saga {
             // });
             resolve(state);
           });
-        } else if (model.reducers[effect]) {
+        }
+        // 如果是reducer
+        else if (model.reducers[effect]) {
           // 是reducers
           model.state = model.reducers[effect](state[namespace], { payload: params });
+
+          // TODO: 将在模型中改变的state同步到全局store的state中
           state[namespace] = model.state;
 
           // state.loading[type] = false;

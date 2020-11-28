@@ -1,5 +1,7 @@
 .idea
 
+.history
+
 node_modules
 
 dist
@@ -17,6 +19,8 @@ test
 .DS_Store
 
 stats.json
+
+test
 
 dll/commons-manifest.json
 dll/commons.js
@@ -36,4 +40,5 @@ yarn.lock
 **/.idea
 **/node_modules
 **/dist
-**/assets
+
+README.html

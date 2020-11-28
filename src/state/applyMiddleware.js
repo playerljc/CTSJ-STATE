@@ -3,4 +3,4 @@
  * @param {Array} - middlewares
  * @return {Array}
  */
-export default (...middlewares) => middlewares.map(middleware => middleware);
+export default (...middlewares) => middlewares.map((middleware) => middleware);

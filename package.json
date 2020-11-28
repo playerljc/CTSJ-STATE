@@ -4,11 +4,27 @@
   "description": "一个简单的状态集管理",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npm run lint:js && npm run lint:style && npm run lint:prettier",
+    "lint-staged": "lint-staged",
+    "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx ",
+    "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src && npm run lint:style",
+    "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
+    "lint:prettier": "check-prettier lint",
+    "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
+    "prettier": "prettier -c --write \"**/*\"",
     "buildpackage": "ctbuild buildpackage"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/playerljc/CTSJ-STATE.git"
+  },
+  "lint-staged": {
+    "**/*.less": "stylelint --syntax less",
+    "**/*.{js,jsx,tsx,ts,less,md,json}": [
+      "prettier --write",
+      "git add"
+    ],
+    "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js"
   },
   "author": "playerljc <playerljc@163.com>",
   "license": "MIT",
@@ -20,17 +36,13 @@
   ],
   "homepage": "https://github.com/playerljc/CTSJ-STATE#readme",
   "devDependencies": {
-    "babel-eslint": "^8.1.2",
-    "eslint": "^4.14.0",
-    "eslint-config-airbnb": "^16.0.0",
-    "eslint-plugin-babel": "^4.0.0",
-    "eslint-plugin-compat": "^2.1.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-markdown": "^1.0.0-beta.6",
-    "eslint-plugin-react": "^7.0.1",
     "@ctsj/build": "^1.0.7",
-    "prop-types": "^15.7.2",
+    "@umijs/fabric": "^2.0.8",
+    "eslint": "^6.8.0",
+    "prettier": "^2.0.5",
+    "stylelint": "^13.7.2",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   }

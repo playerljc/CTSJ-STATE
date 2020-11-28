@@ -1,15 +1,17 @@
 /**
- * combineReducers
- * @param {Object} - reducers
+ * combineReducers - 使用对象的方式处理dispatch
+ * @param {Object} - reducers {
+ *   key: reducer
+ * }
  * @return {Function}
  */
-export default reducers =>
+export default (reducers) =>
   /** Reducer
    *  @param {Object} - state
    *  @param {Object} - action
    *  @return {Function}
    */
-    (state, action) => {
+  (state, action) => {
     let data = state;
     for (const p in reducers) {
       if (!Object.hasOwnProperty(p)) {
