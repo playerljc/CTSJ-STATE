@@ -10,9 +10,9 @@ function trigger(action) {
 }
 
 /**
- * Store
+ * Store - 数据的仓库
  * @class Store
- * @classdesc Store
+ * @classdesc 数据的仓库
  */
 class Store {
   /**
@@ -22,14 +22,20 @@ class Store {
    * @param {Array} - middlewares - 中间件
    */
   constructor(reducer, preloadedState = {}, middlewares = []) {
+    // reducer处理
     this.reducer = reducer || ((state) => state);
+
     // 用缺省值初始化store的数据
     this.state = Object.assign({}, preloadedState);
+
+    // 所有的中间件
     this.middlewares = middlewares || [];
+
     // 给每一个middleware赋值store
     this.middlewares.forEach((m) => {
       m.setStore(this);
     });
+
     // 对store更新进行订阅(subscribe)的句柄
     this.listeners = [];
   }
@@ -67,6 +73,7 @@ class Store {
             // 执行middleWare的before
             middleware
               .before({
+                // 传入的是整个数据
                 state: this.state,
                 action,
               })
@@ -110,6 +117,7 @@ class Store {
             const middleware = this.middlewares[index++];
             middleware
               .after({
+                // 传入的是整个数据
                 state: this.state,
                 action,
               })
@@ -141,7 +149,9 @@ class Store {
   dispatch(action) {
     if (action instanceof Function) {
       action(this.dispatch.bind(this));
-    } else if (this.middlewares.length) {
+    }
+    // 如果存在中间件
+    else if (this.middlewares.length) {
       // 如果有middleWares
       // before 执行所有的middleWare的before
       this.runBeforeMiddleWares(action).then(() => {

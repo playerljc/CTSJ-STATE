@@ -22,6 +22,10 @@ export default {
   initConfig(config) {
     Config = config;
   },
+  /**
+   * setSage - 设置Sage实例
+   * @param ins Sage
+   */
   setSage(ins) {
     sage = ins;
   },
@@ -108,7 +112,7 @@ export default {
 
     const defaultState = {};
 
-    keys.forEach(key => {
+    keys.forEach((key) => {
       if (key !== 'default') {
         defaultState[key] = Service[key].defaultResult();
       }

@@ -1,5 +1,7 @@
 .idea
 
+.history
+
 node_modules
 
 dist
@@ -18,6 +20,8 @@ test
 
 stats.json
 
+test
+
 dll/commons-manifest.json
 dll/commons.js
 dll/commons.prod.js
@@ -34,4 +38,5 @@ npm-debug
 **/.idea
 **/node_modules
 **/dist
-**/assets
+
+README.html

@@ -19,7 +19,7 @@ class History {
   }
 
   onHash() {
-    this.handlers.forEach(h => {
+    this.handlers.forEach((h) => {
       h({ patchname: window.location.pathname });
     });
   }

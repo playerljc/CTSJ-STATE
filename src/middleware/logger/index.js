@@ -17,14 +17,14 @@ class Logger {
    * @return Promise
    */
   before({ state, action }) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       logger.group(
         '%caction %c%s @ %c%s',
         'color:gray',
         'color:#000',
         action.type,
         'color:gray',
-        new Date()
+        new Date(),
       );
       logger.log('%cprev state', 'color:gray', state);
       logger.groupEnd();
@@ -39,14 +39,14 @@ class Logger {
    * @return Promise
    */
   after({ state, action }) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       logger.group(
         '%caction %c%s @ %c%s',
         'color:gray',
         'color:#000',
         action.type,
         'color:gray',
-        new Date()
+        new Date(),
       );
       logger.log('%cnext state', 'color:green', state);
       logger.groupEnd();

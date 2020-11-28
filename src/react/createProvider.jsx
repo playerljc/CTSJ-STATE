@@ -10,11 +10,7 @@ import { ProviderContext } from './Context';
 class Provider extends React.Component {
   render() {
     const { children } = this.props;
-    return (
-      <ProviderContext.Provider value={this.props}>
-        {children}
-      </ProviderContext.Provider>
-    );
+    return <ProviderContext.Provider value={this.props}>{children}</ProviderContext.Provider>;
   }
 }
 
