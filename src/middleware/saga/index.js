@@ -257,7 +257,7 @@ class Saga {
    * isGlobalLoading
    * @return {boolean}
    */
-  isGlobalLoading(/*model*/) {
+  isGlobalLoading(/* model */) {
     const { loading } = this.store.state;
 
     return Array.from(this.models).some(([namespace, model]) => {

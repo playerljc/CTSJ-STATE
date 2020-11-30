@@ -1,3 +1,12 @@
+# 2.0.10(react16.x)
+
+***
+
+2020/11/30
+
+* 在effects中进行了多次put再次使用select获取的时候应该能获取到
+* 在effects中使用put再次调用其他effect，effect中使用select获取的state的模型中的state，需要修改为全局的state
+
 # 2.0.9(react16.x)
 
 ***

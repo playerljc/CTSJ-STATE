@@ -17,7 +17,7 @@ export default ({ store, params, model, run }) => ({ type, ...other }) => {
     // 如果调用的是reducer
   }
   // 如果是reduce
-  else if (reducers[type]) {
+  if (reducers[type]) {
     model.state = reducers[type](store.state[model.namespace], other);
     return model.state;
   }
