@@ -1,3 +1,11 @@
+# 2.0.11(react16.x)
+
+***
+
+2020/11/30
+
+* effects中的put可以调用其他namespace中的effect和reduce
+
 # 2.0.10(react16.x)
 
 ***
