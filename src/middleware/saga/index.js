@@ -357,7 +357,7 @@ class Saga {
 
         // 如果是effect
         if (g) {
-          // 迭代model的effects
+          // 迭代model的effects,这里的state是全局的state
           this.run({ g, state, params, model }).then(() => {
             // model的返回
             // TODO: 将在模型中改变的state同步到全局store的state中
