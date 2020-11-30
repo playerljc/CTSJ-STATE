@@ -80,7 +80,7 @@ export default {
           const methodName = `${namespace}${key.charAt(0).toUpperCase()}${key.substring(1)}`;
           const type = `${namespace}/${key}`;
           // params必须是对象且只有一个对象
-          mapDispatchToProps[methodName] = (params) => dispatch(Object.assign({ type }, params));
+          mapDispatchToProps[methodName] = (params) => dispatch({ type, ...params });
         }
       });
     });
@@ -124,9 +124,9 @@ export default {
       namespace,
       // effects
       effects: {},
-      state: Object.assign({}, defaultState),
+      state: { ...defaultState },
       getDefaultState: () => {
-        return Object.assign({}, defaultState);
+        return { ...defaultState };
       },
       // reducers
       reducers: {

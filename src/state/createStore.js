@@ -26,7 +26,7 @@ class Store {
     this.reducer = reducer || ((state) => state);
 
     // 用缺省值初始化store的数据
-    this.state = Object.assign({}, preloadedState);
+    this.state = { ...preloadedState };
 
     // 所有的中间件
     this.middlewares = middlewares || [];
