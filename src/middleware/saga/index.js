@@ -12,17 +12,20 @@ import History from './history';
  */
 class Saga {
   constructor() {
-    // 存放所有模型
-    // 一个模型的结构如下
-    // {
-    //   namespace
-    //   {
-    //      namespace: String
-    //      effects: Object
-    //      state: Object
-    //      reducers: Object
-    //   }
-    // }
+    /**
+     * 存放所有模型
+      一个模型的结构如下
+      {
+        namespace
+        {
+          namespace: String
+          effects: Object
+          state: Object
+          reducers: Object
+        }
+      }
+     * @type {Map<any, any>}
+     */
     this.models = new Map();
 
     this.history = History;
@@ -105,11 +108,11 @@ class Saga {
   /**
    * run - 运行generator(迭代model的effects)
    * @param g - 生成器函数类
-   * @param state - store的state (dispatch调用则是全局，如果在effects中使用put调用则是model中的state)
+   // * @param state - store的state (dispatch调用则是全局，如果在effects中使用put调用则是model中的state)
    * @param params - action的参数
    * @param model - 模型
    */
-  run({ g, state, params, model }) {
+  run({ g, /* state, */ params, model }) {
     return new Promise((resolve, reject) => {
       // 生成器函数
       const generator = g(params, {
@@ -118,12 +121,13 @@ class Saga {
         race: Race,
         // 这块应该传入所有model的state数据，而不是store的state数据
         select: Select(this /* state */),
-        put: Put({
+        put: Put.call(this, {
           // state: state[model.namespace],
           // 全局的store
           store: this.store,
           params,
           model,
+          // model,
           run: this.run.bind(this),
         }),
         // tack: null,
