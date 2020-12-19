@@ -109,21 +109,23 @@ class Store {
   runAfterMiddleWares(action) {
     return new Promise((resolveParent, rejectParent) => {
       let index = 0;
-      const next = () =>
+
+      const next = (result) =>
         new Promise((resolve, reject) => {
           if (index >= this.middlewares.length) {
-            resolve();
+            resolve(result);
           } else {
             const middleware = this.middlewares[index++];
+
             middleware
               .after({
                 // 传入的是整个数据
                 state: this.state,
                 action,
               })
-              .then(() => {
-                next().then(() => {
-                  resolve();
+              .then((result1) => {
+                next(result1).then((result2) => {
+                  resolve(result2);
                 });
               })
               .catch((error) => {
@@ -133,8 +135,8 @@ class Store {
         });
 
       next()
-        .then(() => {
-          resolveParent();
+        .then((result) => {
+          resolveParent(result);
         })
         .catch((error) => {
           rejectParent(error);
@@ -145,6 +147,7 @@ class Store {
   /**
    * dispatch - 进行数据的修改
    * @param {Object | Function} - action
+   * @return Promise | Void
    */
   dispatch(action) {
     if (action instanceof Function) {
@@ -154,17 +157,21 @@ class Store {
     else if (this.middlewares.length) {
       // 如果有middleWares
       // before 执行所有的middleWare的before
-      this.runBeforeMiddleWares(action).then(() => {
-        // before的时候去掉action中的success
-        const { success, ...filterAction } = action;
-        trigger.call(this, filterAction);
+      return new Promise((resolve) => {
+        this.runBeforeMiddleWares(action).then(() => {
+          // before的时候去掉action中的success
+          const { success, ...filterAction } = action;
+          trigger.call(this, filterAction);
 
-        // detail 执行所有的Reducer
-        this.state = this.reducer(this.state, action);
+          // detail 执行所有的Reducer
+          this.state = this.reducer(this.state, action);
 
-        // after 执行所有的middleWare的after
-        this.runAfterMiddleWares(action).then(() => {
-          trigger.call(this, action);
+          // after 执行所有的middleWare的after
+          this.runAfterMiddleWares(action).then((result) => {
+            trigger.call(this, action);
+
+            resolve(result);
+          });
         });
       });
     } else {

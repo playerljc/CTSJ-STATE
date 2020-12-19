@@ -1,3 +1,12 @@
+# 2.0.12(react16.x)
+
+***
+
+2020/12/19
+
+* dispatch加入返回promise
+* model加入subscriptions
+
 # 2.0.11(react16.x)
 
 ***
