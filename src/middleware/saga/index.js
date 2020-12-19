@@ -5,6 +5,9 @@ import Select from './select';
 import Put from './put';
 import History from './history';
 
+import { isFunction, isObject } from '../../util';
+import { parse } from '../../util/qs';
+
 /**
  * Saga
  * @class Saga
@@ -44,6 +47,46 @@ class Saga {
         global: false,
       };
     }
+  }
+
+  /**
+   * setRouter - 设置React
+   * @param router
+   */
+  setRouter(router) {
+    const self = this;
+
+    this.router = router;
+
+    const srcListen = self.router.history.listen.bind(self.router.history);
+    // 对history的listener进行重写
+    this.router.history.listen = (it) => {
+      // 上来就调用一次listener的回调
+      it({
+        ...{
+          pathname: window.location.pathname,
+          search: window.location.search,
+          query: parse(),
+        },
+        state: { ...self.store.state },
+      });
+
+      srcListen((params) => {
+        it({ ...(params || {}), state: { ...self.store.state } });
+      });
+    };
+
+    // 设置所有model的subscriptions的setup
+    self.router.history = Array.from(self.models.values()).forEach((model) => {
+      if ('subscriptions' in model && isObject(model.subscriptions)) {
+        if ('setup' in model.subscriptions && isFunction(model.subscriptions.setup)) {
+          model.subscriptions.setup({
+            history: self.router.history,
+            dispatch: self.store.dispatch.bind(self.store),
+          });
+        }
+      }
+    });
   }
 
   /**
@@ -141,12 +184,12 @@ class Saga {
         return new Promise((s, e) => {
           /**
            * sucess
-           * @param neginParams
+           * @param beginParams
            */
-          function nextBegin(neginParams) {
-            next(neginParams)
-              .then(() => {
-                s();
+          function nextBegin(beginParams) {
+            next(beginParams)
+              .then((result) => {
+                s(result);
               })
               .catch((err) => {
                 generator.throw(err);
@@ -161,6 +204,8 @@ class Saga {
            * select
            */
           const { value, done } = generator.next(data);
+
+          // 没结束
           if (!done) {
             if (value instanceof Promise) {
               value
@@ -174,16 +219,18 @@ class Saga {
             } else {
               nextBegin(value);
             }
-          } else {
-            s();
+          }
+          // 结束了
+          else {
+            s(value);
           }
         });
       }
 
       next()
-        .then(() => {
+        .then((result) => {
           // 所有任务都完成
-          resolve();
+          resolve(result);
         })
         .catch(() => {
           reject();
@@ -191,22 +238,22 @@ class Saga {
     });
   }
 
-  /**
-   * initSubscriptions
-   * @param model
-   */
-  initSubscriptions(model) {
-    const { subscriptions = {} } = model;
-    if (subscriptions) {
-      const values = Object.values(subscriptions);
-      values.forEach((v) => {
-        v({
-          dispatch: this.store.dispatch,
-          history: this.history,
-        });
-      });
-    }
-  }
+  // /**
+  //  * initSubscriptions
+  //  * @param model
+  //  */
+  // initSubscriptions(model) {
+  //   const { subscriptions = {} } = model;
+  //   if (subscriptions) {
+  //     const values = Object.values(subscriptions);
+  //     values.forEach((v) => {
+  //       v({
+  //         dispatch: this.store.dispatch,
+  //         history: this.history,
+  //       });
+  //     });
+  //   }
+  // }
 
   /**
    * clearUnSubscriptions
@@ -254,7 +301,7 @@ class Saga {
     //   [namespace]: [namespace] in this.store.state ? this.store.state[namespace] : state,
     // });
 
-    this.initSubscriptions(model);
+    // this.initSubscriptions(model);
   }
 
   /**
@@ -362,7 +409,7 @@ class Saga {
         // 如果是effect
         if (g) {
           // 迭代model的effects,这里的state是全局的state
-          this.run({ g, state, params, model }).then(() => {
+          this.run({ g, state, params, model }).then((result) => {
             // model的返回
             // TODO: 将在模型中改变的state同步到全局store的state中
             // loading变成false
@@ -381,7 +428,7 @@ class Saga {
             //     [type]: false,
             //   }),
             // });
-            resolve(state);
+            resolve(result);
           });
         }
         // 如果是reducer
