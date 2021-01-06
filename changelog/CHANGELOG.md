@@ -1,3 +1,11 @@
+# 2.0.14(react16.x)
+
+***
+
+2021/01/06
+
+* saga的serviceregister的effects中加入return接口的返回值
+
 # 2.0.12(react16.x)
 
 ***
