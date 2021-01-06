@@ -167,6 +167,8 @@ export default {
               payload: { [key]: response[dataKey] },
             });
           }
+
+          return response;
         };
       }
     });
