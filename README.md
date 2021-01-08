@@ -10,7 +10,7 @@
 ## 安装
 
 
-```js
+```javascript
 npm install @ctsj/state
 ```
 
@@ -185,7 +185,7 @@ const store = createStore(reducer, {
 **Provider** props：
   - store - Store 例子：
 
-```js
+```javascript
 
 import { Provider } from '@ctsj/state/lib/react';
 ReactDOM.render(
@@ -204,7 +204,7 @@ ReactDOM.render(
   - React组件
   - Callback - 渲染完成会后的回调函数 例子：
 
-```js
+```javascript
 
 import React from 'react';
 import { connect } from '@ctsj/state/lib/react';
@@ -262,7 +262,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Header);
 ## 中间件
 
 * **logger中间件** 
-```js
+```javascript
 import {
   createStore,
   applyMiddleware,
@@ -278,11 +278,12 @@ const store = createStore(
 		
 * **saga中间件**和dva用法一致
   - 引入 
-```js
+```javascript
 import {
   createStore,
   applyMiddleware,
 } from '@ctsj/state/lib/state';
+
 import { createSagaMiddleware } from '@ctsj/state/lib/middleware';
 
 const store = createStore(
@@ -293,24 +294,24 @@ const store = createStore(
 ```
 				
   - Model 
-```js
+```javascript
 export default {
 	namespace: 'todolist',
 	state:{
-		data: [],
+      data: [],
 	},
 	effects: {
-		*fetchList(params.{call,all,put,select}){
-			...
-		}
+      *fetchList(params.{call,all,put,select}){
+        ...
+      },
 	},
 	reducers: {
-		receive(state, { payload }) {
-			return {
-				...state,
-				...payload,
-			};
-		},
+      receive(state, { payload }) {
+        return {
+          ...state,
+          ...payload,
+        };
+      },
 	},
 }
 ```
