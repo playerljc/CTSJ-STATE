@@ -15,7 +15,11 @@ class Provider extends React.Component {
 
   render() {
     const { children } = this.props;
+<<<<<<< HEAD
     return children;
+=======
+    return <ProviderContext.Provider value={this.props}>{children}</ProviderContext.Provider>;
+>>>>>>> origin/put-global-effect-reduce
   }
 }
 
