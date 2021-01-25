@@ -34,7 +34,7 @@
  * @param model - 数据的模型
  * @return {Function}
  */
-export default function ({ store, params, run, model }) {
+export default function ({ /* store, */ params, run, model }) {
   const saga = this;
 
   // eslint-disable-next-line consistent-return
@@ -68,7 +68,12 @@ export default function ({ store, params, run, model }) {
     }
     // 如果是reduce
     if (reducers[curType]) {
-      curModel.state = reducers[curType](store.state[curModel.namespace], other);
+      curModel.state = reducers[curType](
+        // 之前初始值用的是store中model的数据，而现在修改为使用model的state
+        // 原因是因为这个时候model的数据还没有同步到store的model中
+        curModel.state || {} /* store.state[curModel.namespace] */,
+        other,
+      );
       return curModel.state;
     }
   };
