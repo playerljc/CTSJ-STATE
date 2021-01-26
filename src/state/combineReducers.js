@@ -1,18 +1,19 @@
 /**
  * combineReducers - 使用对象的方式处理dispatch
- * @param {Object} - reducers {
  *   key: reducer
  * }
  * @return {Function}
+ * @param reducers
  */
 export default (reducers) =>
   /** Reducer
-   *  @param {Object} - state
-   *  @param {Object} - action
    *  @return {Function}
+   * @param state
+   * @param action
    */
   (state, action) => {
     let data = state;
+    // eslint-disable-next-line no-restricted-syntax
     for (const p in reducers) {
       if (!Object.hasOwnProperty(p)) {
         data = reducers[p](data, action);

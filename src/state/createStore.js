@@ -17,11 +17,11 @@ function trigger(action) {
 class Store {
   /**
    * constrcutor - Store的构造方法
-   * @param {Object} - reducer - Reducer实例
-   * @param {Object | Array} - preloadedState - Store的默认值
-   * @param {Array} - middlewares - 中间件
+   * @param reducer
+   * @param preloadedState
+   * @param middleWares
    */
-  constructor(reducer, preloadedState = {}, middlewares = []) {
+  constructor(reducer, preloadedState = {}, middleWares = []) {
     // reducer处理
     this.reducer = reducer || ((state) => state);
 
@@ -29,7 +29,7 @@ class Store {
     this.state = { ...preloadedState };
 
     // 所有的中间件
-    this.middlewares = middlewares || [];
+    this.middlewares = middleWares || [];
 
     // 给每一个middleware赋值store
     this.middlewares.forEach((m) => {
@@ -146,9 +146,10 @@ class Store {
 
   /**
    * dispatch - 进行数据的修改
-   * @param {Object | Function} - action
+   * @param action
    * @return Promise | Void
    */
+  // eslint-disable-next-line consistent-return
   dispatch(action) {
     if (action instanceof Function) {
       action(this.dispatch.bind(this));
@@ -184,7 +185,7 @@ class Store {
 
   /**
    * subscribe - 对store数据更改的监听
-   * @param {Function} - listener
+   * @param listener
    * @return {Function} - 删除该句柄的方法
    */
   subscribe(listener) {
@@ -200,10 +201,10 @@ class Store {
 
 /**
  * createStore - 创建一个Store
- * @param {Object} - reducer - Reducer实例
- * @param {Object | Array} - preloadedState - store的默认值
- * @param {Array} - middlewares - 中间件
+ * @param reducer
+ * @param preloadedState
+ * @param middleWares
  * @return {Store}
  */
-export default (reducer, preloadedState, middlewares) =>
-  new Store(reducer, preloadedState, middlewares);
+export default (reducer, preloadedState, middleWares) =>
+  new Store(reducer, preloadedState, middleWares);

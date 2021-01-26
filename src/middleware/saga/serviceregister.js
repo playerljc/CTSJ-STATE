@@ -14,10 +14,10 @@ let Config;
 export default {
   /**
    * initConfig - 服务注册初始化
-   * @param {Object} - config
    * - namespace: service的实例
    * property: model的namespace，也可以理解为模块名称
    * value: value为Service的实例对象
+   * @param config
    */
   initConfig(config) {
     Config = config;
@@ -89,8 +89,6 @@ export default {
   },
   /**
    * model - 生成Service对应的Model
-   * @param {String} - namespace
-   * @return {Object} - Model
    * 此方默认处理Service中的所有接口，默认生成的Effect只调用接口，
    * 把接口返回值注入到以方法名为Key，返回的dataKey为数据的数据流中，且在model的namespace键中创建
    * 例如：
@@ -103,6 +101,8 @@ export default {
    *      fetchList: 数据
    *    }
    * }
+   * @param namespace
+   * @return {{getDefaultState: (function(): {}), effects: {}, namespace: *, reducers: {receive(*, {payload: *}): *}, state: {}}} - Model
    */
   model(namespace) {
     // service的实例
@@ -144,6 +144,7 @@ export default {
       if (key !== 'default') {
         // params是调用mapDispatchToProps的参数
         // success是回调函数
+        // eslint-disable-next-line func-names
         model.effects[key] = function* (params, { call, put }) {
           const response = yield call(Service[key].call, params);
 
@@ -178,7 +179,7 @@ export default {
 
   /**
    * 加入自动清除的connect
-   * @param serviceName
+   * @param serviceNames
    * @return {function(*=, *=): function(*=): *}
    */
   connect(serviceNames) {

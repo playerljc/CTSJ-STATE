@@ -1,7 +1,7 @@
 export default {
   /**
    * cloneDeep
-   * @param {Object | Array} - obj
+   * @param obj
    * @return {Object | Array}
    */
   cloneDeep(obj) {

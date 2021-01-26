@@ -37,7 +37,7 @@
 export default function ({ /* store, */ params, run, model }) {
   const saga = this;
 
-  // eslint-disable-next-line consistent-return
+  // eslint-disable-next-line consistent-return,func-names
   return function ({ type, ...other }) {
     let curModel;
     let curType;

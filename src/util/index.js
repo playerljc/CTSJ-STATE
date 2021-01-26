@@ -1,11 +1,10 @@
 /**
  * isEmpty - 对象是否为空
  * @param value
+ * @return boolean
  */
 export function isEmpty(value) {
-  if (value === null || value === '' || value === undefined) return true;
-
-  return false;
+  return value === null || value === '' || value === undefined;
 }
 
 /**

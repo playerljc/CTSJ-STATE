@@ -1,6 +1,6 @@
 /**
  * parse - 解析window.location.search为对象
- * @param ?arg string 待解析的字符串
+ * @param arg
  * @return Object<key/value> | null
  */
 export function parse(arg) {
@@ -56,6 +56,7 @@ export function stringify(obj) {
 
   const result = [];
 
+  // eslint-disable-next-line func-names
   keys.forEach(function (key, index) {
     result.push(`${index === 0 ? '?' : ''}${key}=${encodeURIComponent(queryObj[key])}`);
   });
