@@ -16,7 +16,7 @@ function trigger(action) {
  */
 class Store {
   /**
-   * constrcutor - Store的构造方法
+   * constructor - Store的构造方法
    * @param reducer
    * @param preloadedState
    * @param middleWares
@@ -69,6 +69,7 @@ class Store {
             resolve();
           } else {
             // 取出一个middle
+            // eslint-disable-next-line no-plusplus
             const middleware = this.middlewares[index--];
             // 执行middleWare的before
             middleware
@@ -115,6 +116,7 @@ class Store {
           if (index >= this.middlewares.length) {
             resolve(result);
           } else {
+            // eslint-disable-next-line no-plusplus
             const middleware = this.middlewares[index++];
 
             middleware
