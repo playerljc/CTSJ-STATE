@@ -5,15 +5,12 @@ import Immutable from '../util/immutable';
 
 /**
  * createConnect
- * @param {Function} - mapStateToProps
- * @param {Function} - mapDispatchToProps
- * @return {HOC}
+ * @param mapStateToProps
+ * @param mapDispatchToProps
  */
 export default (mapStateToProps, mapDispatchToProps) =>
   /**
    * ConnectHOC - 一个提供store处理的工厂类
-   * @param {ReactElement} - Component
-   * @param {
    *   isClear: boolean - 是否清除页面用到的store数据
    *   clearGroups: [
    *     {
@@ -22,21 +19,36 @@ export default (mapStateToProps, mapDispatchToProps) =>
    *     }
    *   ]
    * }
+   * @param Component
+   * @param Config
    */
   (Component, Config) => {
     class CreateConnect extends React.Component {
+      /**
+       * constructor
+       * @param props
+       */
       constructor(props) {
         super(props);
+
         this.state = {
           state: null,
         };
       }
 
+      /**
+       * componentDidMount
+       */
       componentDidMount() {
         const { store } = this;
+
+        // 注册store的更改事件
         this.unsubscribe = store.subscribe(this.onSubscribe);
       }
 
+      /**
+       * componentWillUnmount
+       */
       componentWillUnmount() {
         // 加入清理页面用到的store的操作
         if (Config && Config.isClear) {
@@ -48,13 +60,20 @@ export default (mapStateToProps, mapDispatchToProps) =>
             });
           });
         }
+
         this.unsubscribe();
       }
 
+      /**
+       * onSubscribe
+       * @param action
+       */
       onSubscribe = (action) => {
         const { store } = this;
+
         // store的数据
         const state = store.getState();
+
         // 之前state的数据
         this.setState(
           {
@@ -84,24 +103,34 @@ export default (mapStateToProps, mapDispatchToProps) =>
       //   return this.ins;
       // }
 
+      /**
+       * render
+       * @return {*}
+       */
       render() {
         return (
           <ProviderContext.Consumer>
             {({ store }) => {
               if (!this.store) this.store = store;
+              // 将store的数据存储在state中
               const state = this.state.state ? this.state.state : this.store.getState();
 
               let dispatch = {};
+
+              // mapDispatchToProps
               if (mapDispatchToProps) {
                 dispatch = mapDispatchToProps(this.store.dispatch.bind(this.store));
               }
 
               let props = {};
+
+              // mapStateToProps
               if (mapStateToProps) {
                 props = mapStateToProps(state);
               }
 
               this.ref = this.props.forwardedRef || React.createRef();
+
               return (
                 <Component
                   // ref={(ins) => {

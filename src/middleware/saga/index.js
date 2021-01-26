@@ -107,10 +107,10 @@ class Saga {
   }
 
   /**
-   * unmodel - 注销一个model
+   * unModel - 注销一个model
    * @param namespace
    */
-  unmodel(namespace) {
+  unModel(namespace) {
     const model = this.models.get(namespace);
 
     if (model) {
@@ -361,7 +361,9 @@ class Saga {
         // 如果是effect
         if (g) {
           // saga的before中修改了state的loading
+          // eslint-disable-next-line no-param-reassign
           state.loading[type] = true;
+          // eslint-disable-next-line no-param-reassign
           state.loading.global = true;
 
           // console.log('before', type, state.loading[type]);
@@ -413,10 +415,13 @@ class Saga {
             // model的返回
             // TODO: 将在模型中改变的state同步到全局store的state中
             // loading变成false
+            // eslint-disable-next-line no-param-reassign
             state.loading[type] = false;
 
             // 将在模型中改变的state同步到全局store的state中
+            // eslint-disable-next-line no-param-reassign
             state[namespace] = model.state;
+            // eslint-disable-next-line no-param-reassign
             state.loading.global = this.isGlobalLoading(/* model */);
             // console.log('after', 'effect', type, state.loading[type]);
             // console.log('after', 'effect', 'global', state.loading.global);
@@ -437,6 +442,7 @@ class Saga {
           model.state = model.reducers[effect](state[namespace], { payload: params });
 
           // TODO: 将在模型中改变的state同步到全局store的state中
+          // eslint-disable-next-line no-param-reassign
           state[namespace] = model.state;
 
           // state.loading[type] = false;

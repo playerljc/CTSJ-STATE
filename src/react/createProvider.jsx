@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
  * @class Provider
  * @classdesc 一个Store的最外层容器 提供store实例
  */
+// eslint-disable-next-line react/prefer-stateless-function
 class Provider extends React.Component {
   getChildContext() {
     return {
@@ -28,6 +29,7 @@ Provider.defaultProps = {
 };
 
 Provider.propTypes = {
+  // eslint-disable-next-line react/no-unused-prop-types
   store: PropTypes.object,
 };
 

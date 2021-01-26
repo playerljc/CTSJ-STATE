@@ -1,6 +1,6 @@
 /**
  * applyMiddleware - 组合所有中间件
- * @param {Array} - middlewares
+ * @param middleWares
  * @return {Array}
  */
-export default (...middlewares) => middlewares.map((middleware) => middleware);
+export default (...middleWares) => middleWares.map((middleware) => middleware);

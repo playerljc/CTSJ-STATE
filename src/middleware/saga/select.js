@@ -10,6 +10,7 @@
  * @return {function(*): *}
  */
 export default function (saga) {
+  // eslint-disable-next-line func-names
   return function (iterator) {
     // 所有model的state数据
     const selectContext = {};

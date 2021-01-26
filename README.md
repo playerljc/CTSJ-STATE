@@ -1,54 +1,51 @@
 # CTSJ-STATE
 
-* 一个简单的状态集管理(同时实现了dva数据流和logger中间件)
+- 一个简单的状态集管理(同时实现了 dva 数据流和 logger 中间件)
 
 ## 简介
 
-* **把redux、react-redux、redux-logger和dva数据流结合起来的一个简版状态集**
-* 本数据集的特点是增加了同步的回调功能和根据Servive自动生成model和mapStateToProps、mapDispatchToProps和Model功能
+- **把 redux、react-redux、redux-logger 和 dva 数据流结合起来的一个简版状态集**
+- 本数据集的特点是增加了同步的回调功能和根据 Servive 自动生成 model 和 mapStateToProps、mapDispatchToProps 和 Model 功能
 
 ## 安装
 
-
-```javascript
+```js
 npm install @ctsj/state
 ```
 
-
 ## 目录
 
-* [状态集本身](#state)
-  - [createStore](#createstore)
-  - [combineReducers](#combinereducers)
-  - [Store](#store)
-* [React中使用](#reactuse)
-  - [Provider](#provider)
+- [状态集本身](#状态集本身)
+  - [createStore](#createStore)
+  - [combineReducers](#combineReducers)
+  - [Store](#Store)
+- [React 中使用](#React中使用)
+  - [Provider](#Provider)
   - [connect](#connect)
-* [中间件](#middleware)
-  - [logger中间件](#logger)
-  - [saga中间件](#saga)
-* [用Service自动生成mapStateToProps、mapDispatchToProps和Model](#servicegenerator)
-* [ToDoList的demo](#todolist)
+- [中间件](#中间件)
+  - [logger 中间件](#logger中间件)
+  - [saga 中间件](#saga中间件)
+- [用 Service 自动生成 mapStateToProps、mapDispatchToProps 和 Model](#用Service自动生成mapStateToProps、mapDispatchToProps和Model)
+- [使用 state 作为数据源](#使用state作为数据源)
+  - [使用 class 的方式](#使用class的方式)
+  - [使用 hooks 的方式](#使用hooks的方式)
+- [ToDoList 的 demo](#ToDoList的demo)
 
 ## 状态集本身
 
-**createStore** 
-说明：
-  - createStore(reducer,preloadedState)
-    + reducer-和redux的reducer一致
-    + preloadedState-Store的初始化值 
-例子：
+**createStore** 说明：
+
+- createStore(reducer,preloadedState) + reducer-和 redux 的 reducer 一致 + preloadedState-Store 的初始化值 例子：
 
 ```js
-
 import { createStore } from '@ctsj/state/lib/state';
 
-function reducer(state,action) {
-  const {data = []} = state;
+function reducer(state, action) {
+  const { data = [] } = state;
   const { type } = action;
   switch (type) {
     case 'add':
-      data.push({id:1});
+      data.push({ id: 1 });
       break;
     default:
       break;
@@ -56,16 +53,16 @@ function reducer(state,action) {
   return state;
 }
 
-const store = createStore(reducer, {a:1,b:2});
+const store = createStore(reducer, { a: 1, b: 2 });
 ```
-**combineReducers** 
-说明：
-  - reducers- Object 
-  - 例子：
+
+**combineReducers** 说明：
+
+- reducers- Object
+- 例子：
 
 ```js
-
-reducer.jsx
+reducer.jsx;
 
 import uuid from 'uuid/v1';
 
@@ -104,7 +101,7 @@ export function updateTodo(state, action) {
   const { id, value, type } = action;
   switch (type) {
     case 'update':
-      const index = data.findIndex(t => t.id === id);
+      const index = data.findIndex((t) => t.id === id);
       if (index !== -1) {
         data[index].value = value;
       }
@@ -126,7 +123,7 @@ export function completeTodo(state, action) {
   const { id, type } = action;
   switch (type) {
     case 'complete':
-      const index = data.findIndex(t => t.id === id);
+      const index = data.findIndex((t) => t.id === id);
       if (index !== -1) {
         data[index].type = 'complete';
       }
@@ -148,7 +145,7 @@ export function deleteTodo(state, action) {
   const { id } = action;
   switch (action.type) {
     case 'delete':
-      const index = data.findIndex(t => t.id === id);
+      const index = data.findIndex((t) => t.id === id);
       if (index !== -1) {
         data.splice(index, 1);
       }
@@ -159,13 +156,16 @@ export function deleteTodo(state, action) {
   return state;
 }
 
-index.jsx
+index.jsx;
 
 import { createStore, combineReducers } from '@ctsj/state/lib/state';
-import {addTodo, updateTodo, completeTodo, deleteTodo} from './reducer';
+import { addTodo, updateTodo, completeTodo, deleteTodo } from './reducer';
 
 const reducer = combineReducers({
-  addTodo, updateTodo, completeTodo, deleteTodo,
+  addTodo,
+  updateTodo,
+  completeTodo,
+  deleteTodo,
 });
 
 const store = createStore(reducer, {
@@ -175,37 +175,35 @@ const store = createStore(reducer, {
 
 ## Store
 
-* 方法：
-  - getStatus - 返回state
-  - subscribe - 监听state的数据变化,返回值是注销监听句柄
+- 方法：
+  - getStatus - 返回 state
+  - subscribe - 监听 state 的数据变化,返回值是注销监听句柄
   - dispatch - action 发送数据改变
 
-## React中使用
+## React 中使用
 
 **Provider** props：
-  - store - Store 例子：
 
-```javascript
+- store - Store 例子：
 
+```js
 import { Provider } from '@ctsj/state/lib/react';
 ReactDOM.render(
-  (
-    <Provider store={store}>
-      <App />
-    </Provider>
-  ),
-  document.getElementById('app')
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('app'),
 );
 ```
 
 **connect** 说明：
-  - mapStateToProps - 处理state到props的合并
-  - mapDispatchToProps - 用dispatch处理数据改变
-  - React组件
-  - Callback - 渲染完成会后的回调函数 例子：
 
-```javascript
+- mapStateToProps - 处理 state 到 props 的合并
+- mapDispatchToProps - 用 dispatch 处理数据改变
+- React 组件
+- Callback - 渲染完成会后的回调函数 例子：
 
+```js
 import React from 'react';
 import { connect } from '@ctsj/state/lib/react';
 import Immutable from '@ctsj/state/lib/util/immutable';
@@ -226,14 +224,17 @@ function Header({ onAdd }) {
       <div className="title">ToDoList</div>
       <div className="input">
         <input
-            placeholder="&#x6DFB;&#x52A0;ToDo"
-            type="text"
-            onKeyUp={(e) => {
-              const { which, target: { value } } = e;
-              if (which === 13) {
-                onAdd(value);
-              }
-            }}
+          placeholder="&#x6DFB;&#x52A0;ToDo"
+          type="text"
+          onKeyUp={(e) => {
+            const {
+              which,
+              target: { value },
+            } = e;
+            if (which === 13) {
+              onAdd(value);
+            }
+          }}
         />
       </div>
     </div>
@@ -256,75 +257,168 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
-
 ```
 
 ## 中间件
 
-* **logger中间件** 
-```javascript
-import {
-  createStore,
-  applyMiddleware,
-} from '@ctsj/state/lib/state';
+- **logger 中间件**
+
+```js
+import { createStore, applyMiddleware } from '@ctsj/state/lib/state';
 import { createLoggerMiddleware } from '@ctsj/state/lib/middleware';
 
-const store = createStore(
-  null,
-  {},
-  applyMiddleware(createLoggerMiddleware())
-);
+const store = createStore(null, {}, applyMiddleware(createLoggerMiddleware()));
 ```
-		
-* **saga中间件**和dva用法一致
-  - 引入 
-```javascript
-import {
-  createStore,
-  applyMiddleware,
-} from '@ctsj/state/lib/state';
 
+- **saga 中间件**和 dva 用法一致
+  - 引入
+
+```js
+import { createStore, applyMiddleware } from '@ctsj/state/lib/state';
 import { createSagaMiddleware } from '@ctsj/state/lib/middleware';
 
-const store = createStore(
-  null,
-  {},
-  applyMiddleware(createSagaMiddleware())
-);
+const store = createStore(null, {}, applyMiddleware(createSagaMiddleware()));
 ```
-				
-  - Model 
-```javascript
+
+- Model
+
+```js
 export default {
 	namespace: 'todolist',
 	state:{
-      data: [],
+		data: [],
 	},
 	effects: {
-      *fetchList(params.{call,all,put,select}){
-        ...
-      },
+		*fetchList(params.{call,all,put,select}){
+			...
+		}
 	},
 	reducers: {
-      receive(state, { payload }) {
-        return {
-          ...state,
-          ...payload,
-        };
-      },
+		receive(state, { payload }) {
+			return {
+				...state,
+				...payload,
+			};
+		},
 	},
 }
 ```
-				
 
-## 用Service自动生成mapStateToProps、mapDispatchToProps和Model
+## 用 Service 自动生成 mapStateToProps、mapDispatchToProps 和 Model
 
-* [具体请参开此链接](https://github.com/playerljc/CTSJ-DvaGenerator)
+- [具体请参开此链接](https://github.com/playerljc/CTSJ-DvaGenerator)
+
+## 使用 state 作为数据源
+
+有的时候使用者其实想使用 model 的整体处理数据的能力，但组件间又没有共享数据的交换，这个是后就可以把数据源设置成 state，现在就可以实现使用 state 作为数据源，同时也能使用 model 处理数据的能力。
+
+- **使用 class 的方式** 使用 createState 方法对 state 进行包装即可
+
+```javascript
+import ServiceRegister from '@ctsj/state/lib/middleware/saga/serviceregister';
+import createState from '@ctsj/state/lib/react/createState';
+
+class UserList extends React.Component {
+  constructor(props) {
+    super(props);
+
+    // 初始化的state数据
+    this.state = {
+
+    }
+
+    const models = [];
+    const requireComponent = require.context('../../../../model', false, /.*\.(js)$/);
+    requireComponent.keys().forEach((fileName) => {
+      const model = requireComponent(fileName);
+      models.push(model.default());
+    });
+
+    // 使用createState对state进行包装
+    this.unsubscribe = createState({
+      initialState: Object.assign({}, this.state),
+      models,
+      mapState: (state) =>
+        Object.assign(
+          ServiceRegister.mapStateToProps({
+            namespaces: [serviceName],
+            state,
+          }),
+          {
+            loading: state.loading,
+          },
+        ),
+      mapDispatch: (dispatch) =>
+        ServiceRegister.mapDispatchToProps({
+          namespaces: [serviceName],
+          dispatch,
+        }),
+      ref: this,
+      middleWares: [],
+      reducer: null,
+    });
+  }
+
+  componentWillUnmount() {
+    // 销毁的时候注销
+    this.unsubscribe();
+  }
+
+  ......
+
+}
+```
+
+- **使用 hooks 的方式**
+
+```javascript
+import { useSagaState } from '@ctsj/state/lib/react';
+import ServiceRegister from '@ctsj/state/lib/middleware/saga/serviceregister';
+
+export default () => {
+  useEffect(() => {
+    // 加载数据
+  }, []);
+
+  const models = [];
+  const requireComponent = require.context('../../../../model', false, /.*\.(js)$/);
+  requireComponent.keys().forEach((fileName) => {
+    const model = requireComponent(fileName);
+    models.push(model.default());
+  });
+
+  // 使用useSagaState对state进行包装
+  const state = useSagaState({
+    initialState: {},
+    models,
+    mapState: (state) =>
+      Object.assign(
+        ServiceRegister.mapStateToProps({
+          namespaces: [serviceName],
+          state,
+        }),
+        {
+          loading: state.loading,
+        },
+      ),
+    mapDispatch: (dispatch) =>
+      ServiceRegister.mapDispatchToProps({
+        namespaces: [serviceName],
+        dispatch,
+      }),
+    middleWares: [],
+    reducer: null,
+  });
+  
+  ......
+
+};
+```
 
 ## ToDoList
 
-进入demo目录
+进入 demo 目录
 
 1. npm install
 2. npm run startapp
-3. 浏览器输入localhost:8000
+3. 浏览器输入 localhost:8000

@@ -16,6 +16,7 @@ class Logger {
    * @param action
    * @return Promise
    */
+  // eslint-disable-next-line class-methods-use-this
   before({ state, action }) {
     return new Promise((resolve) => {
       logger.group(
@@ -38,6 +39,7 @@ class Logger {
    * @param action
    * @return Promise
    */
+  // eslint-disable-next-line class-methods-use-this
   after({ state, action }) {
     return new Promise((resolve) => {
       logger.group(

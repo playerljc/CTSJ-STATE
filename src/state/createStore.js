@@ -4,7 +4,7 @@
  */
 function trigger(action) {
   const { listeners } = this;
-  listeners.forEach(ins => {
+  listeners.forEach((ins) => {
     ins(action);
   });
 }
@@ -16,16 +16,12 @@ function trigger(action) {
  */
 class Store {
   /**
-   * constrcutor - Store的构造方法
-   * @param {Object} - reducer - Reducer实例
-   * @param {Object | Array} - preloadedState - Store的默认值
-   * @param {Array} - middlewares - 中间件
+   * constructor - Store的构造方法
+   * @param reducer
+   * @param preloadedState
+   * @param middleWares
    */
-  constructor(reducer, preloadedState = {}, middlewares = []) {
-<<<<<<< HEAD
-    this.reducer = reducer || ((state) => state);
-    this.state = Object.assign({}, preloadedState);
-=======
+  constructor(reducer, preloadedState = {}, middleWares = []) {
     // reducer处理
     this.reducer = reducer || ((state) => state);
 
@@ -33,8 +29,7 @@ class Store {
     this.state = { ...preloadedState };
 
     // 所有的中间件
->>>>>>> origin/put-global-effect-reduce
-    this.middlewares = middlewares || [];
+    this.middlewares = middleWares || [];
 
     // 给每一个middleware赋值store
     this.middlewares.forEach((m) => {
@@ -74,23 +69,18 @@ class Store {
             resolve();
           } else {
             // 取出一个middle
+            // eslint-disable-next-line no-plusplus
             const middleware = this.middlewares[index--];
             // 执行middleWare的before
             middleware
               .before({
-<<<<<<< HEAD
-=======
                 // 传入的是整个数据
->>>>>>> origin/put-global-effect-reduce
                 state: this.state,
                 action,
               })
               .then((/* state */) => {
                 // cloneState = state;
-<<<<<<< HEAD
-=======
                 // 继续向前执行middleWare
->>>>>>> origin/put-global-effect-reduce
                 next().then(() => {
                   resolve();
                 });
@@ -120,28 +110,17 @@ class Store {
   runAfterMiddleWares(action) {
     return new Promise((resolveParent, rejectParent) => {
       let index = 0;
-<<<<<<< HEAD
-      const next = () =>
-=======
 
       const next = (result) =>
->>>>>>> origin/put-global-effect-reduce
         new Promise((resolve, reject) => {
           if (index >= this.middlewares.length) {
             resolve(result);
           } else {
+            // eslint-disable-next-line no-plusplus
             const middleware = this.middlewares[index++];
 
             middleware
               .after({
-<<<<<<< HEAD
-                state: this.state,
-                action,
-              })
-              .then(() => {
-                next().then(() => {
-                  resolve();
-=======
                 // 传入的是整个数据
                 state: this.state,
                 action,
@@ -149,7 +128,6 @@ class Store {
               .then((result1) => {
                 next(result1).then((result2) => {
                   resolve(result2);
->>>>>>> origin/put-global-effect-reduce
                 });
               })
               .catch((error) => {
@@ -159,13 +137,8 @@ class Store {
         });
 
       next()
-<<<<<<< HEAD
-        .then(() => {
-          resolveParent();
-=======
         .then((result) => {
           resolveParent(result);
->>>>>>> origin/put-global-effect-reduce
         })
         .catch((error) => {
           rejectParent(error);
@@ -174,38 +147,14 @@ class Store {
   }
 
   /**
-<<<<<<< HEAD
-   * dispatch
-   * @param action
-=======
    * dispatch - 进行数据的修改
-   * @param {Object | Function} - action
+   * @param action
    * @return Promise | Void
->>>>>>> origin/put-global-effect-reduce
    */
+  // eslint-disable-next-line consistent-return
   dispatch(action) {
     if (action instanceof Function) {
       action(this.dispatch.bind(this));
-<<<<<<< HEAD
-    } else if (this.middlewares.length) {
-      // 如果有middlewares
-      // before
-      this.runBeforeMiddlewares(action).then(() => {
-        // before的时候去掉action中的success
-        const { success, ...filterAction } = action;
-        trigger.call(this, filterAction);
-
-        // detail
-        this.state = this.reducer(this.state, action);
-
-        // after
-        this.runAfterMiddlewares(action).then(() => {
-          trigger.call(this, action);
-        });
-      });
-    } else {
-      // 如果没有middlewares
-=======
     }
     // 如果存在中间件
     else if (this.middlewares.length) {
@@ -231,7 +180,6 @@ class Store {
     } else {
       // 如果没有middleWares
       // 执行所有的Reducer
->>>>>>> origin/put-global-effect-reduce
       this.state = this.reducer(this.state, action);
       trigger.call(this, action);
     }
@@ -239,7 +187,7 @@ class Store {
 
   /**
    * subscribe - 对store数据更改的监听
-   * @param {Function} - listener
+   * @param listener
    * @return {Function} - 删除该句柄的方法
    */
   subscribe(listener) {
@@ -255,10 +203,10 @@ class Store {
 
 /**
  * createStore - 创建一个Store
- * @param {Object} - reducer - Reducer实例
- * @param {Object | Array} - preloadedState - store的默认值
- * @param {Array} - middlewares - 中间件
+ * @param reducer
+ * @param preloadedState
+ * @param middleWares
  * @return {Store}
  */
-export default (reducer, preloadedState, middlewares) =>
-  new Store(reducer, preloadedState, middlewares);
+export default (reducer, preloadedState, middleWares) =>
+  new Store(reducer, preloadedState, middleWares);

@@ -1,7 +1,7 @@
 /**
  * call - 异步调用
- * @param {Function | Array<Context,Function>} - func
- * @param {Array} - args
+ * @param func
+ * @param args
  */
 export default (func, ...args) => {
   let context = window;
