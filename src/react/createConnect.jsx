@@ -129,18 +129,25 @@ export default (mapStateToProps, mapDispatchToProps) =>
                 props = mapStateToProps(state);
               }
 
-              this.ref = this.props.forwardedRef || React.createRef();
+              const allProps = {
+                ...this.props,
+                ...props,
+                ...dispatch,
+                dispatch: store.dispatch.bind(store),
+              };
+
+              // 如果 Component 是 FunctionComponent 就不赋值ref了
+              if (Component.prototype.isReactComponent) {
+                allProps.ref = this.props.forwardedRef || React.createRef();
+              }
 
               return (
                 <Component
                   // ref={(ins) => {
                   //   this.ins = ins;
                   // }}
-                  ref={this.ref}
-                  {...this.props}
-                  {...props}
-                  {...dispatch}
-                  dispatch={store.dispatch.bind(store)}
+                  // ref={this.ref}
+                  {...allProps}
                 />
               );
             }}
