@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ProviderContext } from './Context';
 
 /**
  * Provider
@@ -8,19 +9,9 @@ import PropTypes from 'prop-types';
  */
 // eslint-disable-next-line react/prefer-stateless-function
 class Provider extends React.Component {
-  getChildContext() {
-    return {
-      store: this.props.store,
-    };
-  }
-
   render() {
     const { children } = this.props;
-<<<<<<< HEAD
-    return children;
-=======
     return <ProviderContext.Provider value={this.props}>{children}</ProviderContext.Provider>;
->>>>>>> origin/put-global-effect-reduce
   }
 }
 
@@ -30,10 +21,6 @@ Provider.defaultProps = {
 
 Provider.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
-  store: PropTypes.object,
-};
-
-Provider.childContextTypes = {
   store: PropTypes.object,
 };
 
