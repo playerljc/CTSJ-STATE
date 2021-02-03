@@ -2,6 +2,7 @@ import React from 'react';
 
 import { ProviderContext } from './Context';
 import Immutable from '../util/immutable';
+import { isArray, isObject } from '../util';
 
 /**
  * createConnect
@@ -137,8 +138,14 @@ export default (mapStateToProps, mapDispatchToProps) =>
               };
 
               // 如果 Component 是 FunctionComponent 就不赋值ref了
-              if (Component.prototype.isReactComponent) {
-                allProps.ref = this.props.forwardedRef || React.createRef();
+              if (isArray(Component)) {
+                if (Component.prototype.isReactComponent) {
+                  allProps.ref = this.props.forwardedRef || React.createRef();
+                }
+              } else if (isObject(Component)) {
+                if (Component.constructor.prototype.isReactComponent) {
+                  allProps.ref = this.props.forwardedRef || React.createRef();
+                }
               }
 
               return (
