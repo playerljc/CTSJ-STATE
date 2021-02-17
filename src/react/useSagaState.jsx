@@ -85,7 +85,7 @@ class SagaState {
     return (state, action) => {
       const {
         type,
-        params: { props, dispatch },
+        params: { props, dispatch, action: dispatchAction },
       } = action;
 
       if (type === 'setState') {
@@ -93,6 +93,8 @@ class SagaState {
           ...state,
           ...props,
           ...dispatch,
+          // 用action符号放入action
+          [Symbol.for('action')]: dispatchAction,
         };
       }
 
@@ -140,13 +142,27 @@ class SagaState {
   onSubscribe(reducerDispatch, action) {
     const { props, dispatch } = this.mapTo();
 
-    reducerDispatch({ type: 'setState', params: { props, dispatch } });
+    reducerDispatch({ type: 'setState', params: { props, dispatch, action } });
   }
 }
 
 export default (params) => {
   const ref = useRef(new SagaState(params));
 
+  const [state, dispatch] = useReducer(ref.current.getReducer(), ref.current.getInitial());
+
+  // 用来监控state的变化
+  useEffect(() => {
+    // 用action符号取出action
+    const actionKey = Symbol.for('action');
+
+    // 调用action的success
+    if (state[actionKey] && state[actionKey].success) {
+      state[actionKey].success();
+    }
+  }, [state]);
+
+  // 只注册一次store的subscribe
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const unsubscribe = ref.current.subscribe(dispatch);
@@ -154,9 +170,7 @@ export default (params) => {
     return () => {
       unsubscribe();
     };
-  });
-
-  const [state, dispatch] = useReducer(ref.current.getReducer(), ref.current.getInitial());
+  }, []);
 
   return state;
 };
