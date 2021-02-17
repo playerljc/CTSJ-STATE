@@ -93,6 +93,7 @@ class SagaState {
           ...state,
           ...props,
           ...dispatch,
+          // 用action符号放入action
           [Symbol.for('action')]: dispatchAction,
         };
       }
@@ -152,8 +153,10 @@ export default (params) => {
 
   // 用来监控state的变化
   useEffect(() => {
+    // 用action符号取出action
     const actionKey = Symbol.for('action');
 
+    // 调用action的success
     if (state[actionKey] && state[actionKey].success) {
       state[actionKey].success();
     }
