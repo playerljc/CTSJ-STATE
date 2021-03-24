@@ -88,7 +88,7 @@ export default (mapStateToProps, mapDispatchToProps) =>
             // console.log(this.ins);
             // console.log(this.ins === ins);
             if (success && ins) {
-              if (/* this.ins */ this.ref.current === ins) {
+              if (/* this.ins */ this?.ref?.current === ins) {
                 success.call(ins, Immutable.cloneDeep(other));
               }
             }
