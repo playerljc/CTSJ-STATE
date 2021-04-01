@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ProviderContext } from './Context';
 import Immutable from '../util/immutable';
-import { isArray, isObject } from '../util';
+// import { isArray, isObject } from '../util';
 
 /**
  * createConnect
@@ -25,6 +25,8 @@ export default (mapStateToProps, mapDispatchToProps) =>
    */
   (Component, Config) => {
     class CreateConnect extends React.Component {
+      ref = React.createRef();
+
       /**
        * constructor
        * @param props
@@ -88,21 +90,13 @@ export default (mapStateToProps, mapDispatchToProps) =>
             // console.log(this.ins);
             // console.log(this.ins === ins);
             if (success && ins) {
-              if (/* this.ins */ this?.ref?.current === ins) {
-                success.call(ins, Immutable.cloneDeep(other));
-              }
+              // if (/* this.ins */ this?.ref?.current === ins) {
+              success.call(ins, Immutable.cloneDeep(other));
+              // }
             }
           },
         );
       };
-
-      // /**
-      //  * getInstance
-      //  * @return {ReactElement}
-      //  */
-      // getInstance() {
-      //   return this.ins;
-      // }
 
       /**
        * render
@@ -138,15 +132,15 @@ export default (mapStateToProps, mapDispatchToProps) =>
               };
 
               // 如果 Component 是 FunctionComponent 就不赋值ref了
-              if (isArray(Component)) {
-                if (Component.prototype.isReactComponent) {
-                  allProps.ref = this.props.forwardedRef || React.createRef();
-                }
-              } else if (isObject(Component)) {
-                if (Component.constructor.prototype.isReactComponent) {
-                  allProps.ref = this.props.forwardedRef || React.createRef();
-                }
-              }
+              // if (isArray(Component)) {
+              //   if (Component.prototype.isReactComponent) {
+              //     allProps.ref = this.props.forwardedRef || React.createRef();
+              //   }
+              // } else if (isObject(Component)) {
+              //   if (Component.constructor.prototype.isReactComponent) {
+              //     allProps.ref = this.props.forwardedRef || React.createRef();
+              //   }
+              // }
 
               return (
                 <Component
@@ -155,6 +149,7 @@ export default (mapStateToProps, mapDispatchToProps) =>
                   // }}
                   // ref={this.ref}
                   {...allProps}
+                  ref={this.props.forwardedRef || this.ref}
                 />
               );
             }}
