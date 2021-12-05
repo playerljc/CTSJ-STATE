@@ -146,7 +146,7 @@ export default {
         // success是回调函数
         // eslint-disable-next-line func-names
         model.effects[key] = function* (params, { call, put }) {
-          const response = yield call(Service[key].call, params);
+          let response;
 
           // console.log('CTSJ-STATE----',response);
           // Service中的默认导出必须有的键
@@ -154,6 +154,15 @@ export default {
           // codeSuccessKey为状态域中成功标识
           // dataKey为数据域
           const { codeKey, codeSuccessKey, dataKey } = Service.default;
+
+          try {
+            response = yield call(Service[key].call, params);
+          } catch (err) {
+            response = {
+              [codeKey]: codeSuccessKey,
+              [dataKey]: Service[key].defaultResult(),
+            };
+          }
 
           // console.log('CTSJ-STATE----',codeKey, codeSuccessKey, dataKey);
 

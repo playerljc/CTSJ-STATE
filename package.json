@@ -1,6 +1,6 @@
 {
   "name": "@ctsj/state",
-  "version": "2.0.21",
+  "version": "2.0.22",
   "description": "一个简单的状态集管理",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,7 +12,8 @@
     "lint:prettier": "check-prettier lint",
     "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
     "prettier": "prettier -c --write \"**/*\"",
-    "buildpackage": "ctbuild buildpackage"
+    "buildpackage": "ctbuild buildpackage",
+    "generatorchangelog": "bd changelog/CHANGELOG.html"
   },
   "repository": {
     "type": "git",
