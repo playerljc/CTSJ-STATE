@@ -1,214 +1,224 @@
 <!DOCTYPE html>
 <html>
-<head lang=en>
-  <meta charset=utf-8>
-  <meta name=viewport
-        content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
-  <title></title>
-</head>
+  <head lang="en">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover"
+    />
+    <title></title>
+  </head>
 
-<body>
-<h1>2.0.21</h1>
-<hr/>
-<div>2021/04/01</div>
-<ul>
-  <li>修复判断是否是类组件和函数组件，现在修改为无论是什么形式编写的组件都会有ref</li>
-</ul>
+  <body>
+    <h1>2.0.23</h1>
+    <hr />
+    <div>2021/12/23</div>
+    <ul>
+      <li>对客户端代码如window对象进行空判断已以适用于ssr</li>
+    </ul>
 
-<h1>2.0.20(react16.x)</h1>
-<hr/>
-<div>2021/03/24</div>
-<ul>
-  <li>修复ref.current为空的问题</li>
-</ul>
+    <h1>2.0.22</h1>
+    <hr />
+    <div>2021/12/05</div>
+    <ul>
+      <li>model.effects[key]加入try/catch解决500时候的错误</li>
+    </ul>
 
-<h1>2.0.19(react16.x)</h1>
-<hr/>
-<div>2021/02/17</div>
-<ul>
-  <li>useSagaState的修复</li>
-</ul>
+    <h1>2.0.21</h1>
+    <hr />
+    <div>2021/04/01</div>
+    <ul>
+      <li>修复判断是否是类组件和函数组件，现在修改为无论是什么形式编写的组件都会有ref</li>
+    </ul>
 
-<h1>2.0.18(react16.x)</h1>
-<hr/>
-<div>2021/02/02</div>
-<ul>
-  <li>根据Component是否是Class组件还是函数组件来动态赋值ref(修复2.0.17的bug)</li>
-</ul>
+    <h1>2.0.20(react16.x)</h1>
+    <hr />
+    <div>2021/03/24</div>
+    <ul>
+      <li>修复ref.current为空的问题</li>
+    </ul>
 
-<h1>2.0.17(react16.x)</h1>
-<hr/>
-<div>2021/02/02</div>
-<ul>
-  <li>根据Component是否是Class组件还是函数组件来动态赋值ref</li>
-</ul>
+    <h1>2.0.19(react16.x)</h1>
+    <hr />
+    <div>2021/02/17</div>
+    <ul>
+      <li>useSagaState的修复</li>
+    </ul>
 
-<h1>2.0.16(react16.x)</h1>
-<hr/>
-<div>2021/01/26</div>
-<ul>
-  <li>加入了使用state作为数据源的createState方法和useSagaState的hooks</li>
-</ul>
+    <h1>2.0.18(react16.x)</h1>
+    <hr />
+    <div>2021/02/02</div>
+    <ul>
+      <li>根据Component是否是Class组件还是函数组件来动态赋值ref(修复2.0.17的bug)</li>
+    </ul>
 
-<h1>2.0.15(react16.x)</h1>
-<hr/>
-<div>2021/01/25</div>
-<ul>
-  <li>put方法调用reduce的时候初始化参数修改为model.state</li>
-</ul>
+    <h1>2.0.17(react16.x)</h1>
+    <hr />
+    <div>2021/02/02</div>
+    <ul>
+      <li>根据Component是否是Class组件还是函数组件来动态赋值ref</li>
+    </ul>
 
-<h1>2.0.14(react16.x)</h1>
-<hr/>
-<div>2021/01/06</div>
-<ul>
-  <li>saga的serviceregister的effects中加入return接口的返回值</li>
-</ul>
+    <h1>2.0.16(react16.x)</h1>
+    <hr />
+    <div>2021/01/26</div>
+    <ul>
+      <li>加入了使用state作为数据源的createState方法和useSagaState的hooks</li>
+    </ul>
 
-<h1>2.0.12(react16.x)</h1>
-<hr/>
-<div>2020/12/19</div>
-<ul>
-  <li>dispatch加入返回promise</li>
-  <li>model加入subscriptions</li>
-</ul>
+    <h1>2.0.15(react16.x)</h1>
+    <hr />
+    <div>2021/01/25</div>
+    <ul>
+      <li>put方法调用reduce的时候初始化参数修改为model.state</li>
+    </ul>
 
-<h1>2.0.11(react16.x)</h1>
-<hr/>
-<div>2020/11/30</div>
-<ul>
-  <li>effects中的put可以调用其他namespace中的effect和reduce</li>
-</ul>
+    <h1>2.0.14(react16.x)</h1>
+    <hr />
+    <div>2021/01/06</div>
+    <ul>
+      <li>saga的serviceregister的effects中加入return接口的返回值</li>
+    </ul>
 
-<h1>2.0.10(react16.x)</h1>
-<hr/>
-<div>2020/11/30</div>
-<ul>
-  <li>在effects中进行了多次put再次使用select获取的时候应该能获取到</li>
-  <li>在effects中使用put再次调用其他effect，effect中使用select获取的state的模型中的state，需要修改为全局的state</li>
-</ul>
+    <h1>2.0.12(react16.x)</h1>
+    <hr />
+    <div>2020/12/19</div>
+    <ul>
+      <li>dispatch加入返回promise</li>
+      <li>model加入subscriptions</li>
+    </ul>
 
-<h1>2.0.9(react16.x)</h1>
-<hr/>
-<div>2020/07/12</div>
-<ul>
-  <li>修复若干bug</li>
-</ul>
+    <h1>2.0.11(react16.x)</h1>
+    <hr />
+    <div>2020/11/30</div>
+    <ul>
+      <li>effects中的put可以调用其他namespace中的effect和reduce</li>
+    </ul>
 
-<h1>2.0.8(react16.x)</h1>
-<hr/>
-<div>2020/06/10</div>
-<ul>
-  <li>解决同时调用dispatch的时候数据丢失的问题</li>
-</ul>
+    <h1>2.0.10(react16.x)</h1>
+    <hr />
+    <div>2020/11/30</div>
+    <ul>
+      <li>在effects中进行了多次put再次使用select获取的时候应该能获取到</li>
+      <li>
+        在effects中使用put再次调用其他effect，effect中使用select获取的state的模型中的state，需要修改为全局的state
+      </li>
+    </ul>
 
-<h1>2.0.7(react16.x)</h1>
-<hr/>
-<div>2020/06/10</div>
-<ul>
-  <li>state数据merge的问题</li>
-</ul>
+    <h1>2.0.9(react16.x)</h1>
+    <hr />
+    <div>2020/07/12</div>
+    <ul>
+      <li>修复若干bug</li>
+    </ul>
 
-<h1>2.0.6(react16.x)</h1>
-<hr/>
-<div>2020/06/05</div>
-<ul>
-  <li>state数据不自动merge的bug</li>
-</ul>
+    <h1>2.0.8(react16.x)</h1>
+    <hr />
+    <div>2020/06/10</div>
+    <ul>
+      <li>解决同时调用dispatch的时候数据丢失的问题</li>
+    </ul>
 
-<h1>2.0.5(react16.x)</h1>
-<hr/>
-<div>2020/05/13</div>
-<ul>
-  <li>bug修改</li>
-</ul>
+    <h1>2.0.7(react16.x)</h1>
+    <hr />
+    <div>2020/06/10</div>
+    <ul>
+      <li>state数据merge的问题</li>
+    </ul>
 
-<h1>2.0.4(react16.x)</h1>
-<hr/>
-<div>2020/05/10</div>
-<ul>
-  <li>bug修改</li>
-</ul>
+    <h1>2.0.6(react16.x)</h1>
+    <hr />
+    <div>2020/06/05</div>
+    <ul>
+      <li>state数据不自动merge的bug</li>
+    </ul>
 
-<h1>2.0.2(react16.x)</h1>
-<hr/>
-<div>2020/04/02</div>
-<ul>
-	<li>加入Logger中间件</li>
-	<li>加入Saga中间件</li>
-	<li>加入ServiceGenerator</li>
-</ul>
+    <h1>2.0.5(react16.x)</h1>
+    <hr />
+    <div>2020/05/13</div>
+    <ul>
+      <li>bug修改</li>
+    </ul>
 
-<h1>2.0.1(react15.x)</h1>
-<hr/>
-<div>2020/04/01</div>
-<ul>
-  <li>加入Logger中间件</li>
-  <li>加入Saga中间件</li>
-  <li>加入ServiceGenerator</li>
-</ul>
+    <h1>2.0.4(react16.x)</h1>
+    <hr />
+    <div>2020/05/10</div>
+    <ul>
+      <li>bug修改</li>
+    </ul>
 
-<h1>1.0.7</h1>
-<hr/>
-<div>2020/01/29</div>
-<ul>
-  <li>React16.x在回调函数中加入success参数</li>
-</ul>
+    <h1>2.0.2(react16.x)</h1>
+    <hr />
+    <div>2020/04/02</div>
+    <ul>
+      <li>加入Logger中间件</li>
+      <li>加入Saga中间件</li>
+      <li>加入ServiceGenerator</li>
+    </ul>
 
-<h1>1.0.6</h1>
-<hr/>
-<div>2020/01/29</div>
-<ul>
-  <li>React15.x在回调函数中加入success参数</li>
-</ul>
+    <h1>2.0.1(react15.x)</h1>
+    <hr />
+    <div>2020/04/01</div>
+    <ul>
+      <li>加入Logger中间件</li>
+      <li>加入Saga中间件</li>
+      <li>加入ServiceGenerator</li>
+    </ul>
 
-<h1>1.0.5</h1>
-<hr/>
-<div>2020/01/10</div>
-<ul>
-  <li>React16.x在回调函数中加入action和ins参数</li>
-</ul>
+    <h1>1.0.7</h1>
+    <hr />
+    <div>2020/01/29</div>
+    <ul>
+      <li>React16.x在回调函数中加入success参数</li>
+    </ul>
 
-<h1>1.0.4</h1>
-<hr/>
-<div>2020/01/10</div>
-<ul>
-  <li>React15.x在回调函数中加入action和ins参数</li>
-</ul>
+    <h1>1.0.6</h1>
+    <hr />
+    <div>2020/01/29</div>
+    <ul>
+      <li>React15.x在回调函数中加入success参数</li>
+    </ul>
 
-<h1>1.0.3</h1>
-<hr/>
-<div>2020/01/09</div>
-<ul>
-  <li>React16.x新的Context用法</li>
-</ul>
+    <h1>1.0.5</h1>
+    <hr />
+    <div>2020/01/10</div>
+    <ul>
+      <li>React16.x在回调函数中加入action和ins参数</li>
+    </ul>
 
-<h1>1.0.2</h1>
-<hr/>
-<div>2020/01/09</div>
-<ul>
-  <li>react15.x以下的Context用法</li>
-</ul>
+    <h1>1.0.4</h1>
+    <hr />
+    <div>2020/01/10</div>
+    <ul>
+      <li>React15.x在回调函数中加入action和ins参数</li>
+    </ul>
 
-<h1>1.0.1</h1>
-<hr/>
-<div>2019/12/19</div>
-<ul>
-  <li>加入getInstance获取实例</li>
-</ul>
+    <h1>1.0.3</h1>
+    <hr />
+    <div>2020/01/09</div>
+    <ul>
+      <li>React16.x新的Context用法</li>
+    </ul>
 
-<h1>1.0.1</h1>
-<hr/>
-<div>2019/12/19</div>
-<ul>
-  <li>加入getInstance获取实例</li>
-</ul>
+    <h1>1.0.2</h1>
+    <hr />
+    <div>2020/01/09</div>
+    <ul>
+      <li>react15.x以下的Context用法</li>
+    </ul>
 
-<h1>1.0.0</h1>
-<hr/>
-<div>2019-09-06</div>
-<ul>
-  <li>初始版本</li>
-</ul>
-</body>
+    <h1>1.0.1</h1>
+    <hr />
+    <div>2019/12/19</div>
+    <ul>
+      <li>加入getInstance获取实例</li>
+    </ul>
 
+    <h1>1.0.0</h1>
+    <hr />
+    <div>2019-09-06</div>
+    <ul>
+      <li>初始版本</li>
+    </ul>
+  </body>
 </html>

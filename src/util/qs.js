@@ -11,7 +11,7 @@ export function parse(arg) {
 
   if (arg) {
     searchStr = arg.trim();
-  } else {
+  } else if (typeof window !== 'undefined') {
     const { search } = window.location;
 
     searchStr = search.trim();
