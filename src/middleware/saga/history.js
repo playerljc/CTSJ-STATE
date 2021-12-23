@@ -11,16 +11,22 @@ class History {
   }
 
   initEvent() {
+    if(typeof window === 'undefined') return;
+
     window.addEventListener('hashchange', this.onHash);
   }
 
   removeEvent() {
+    if(typeof window === 'undefined') return;
+
     window.removeEventListener('hashchange', this.onHash);
   }
 
   onHash() {
     this.handlers.forEach((h) => {
-      h({ patchname: window.location.pathname });
+      if(typeof window !== 'undefined')  {
+        h({ patchname: window.location.pathname });
+      }
     });
   }
 

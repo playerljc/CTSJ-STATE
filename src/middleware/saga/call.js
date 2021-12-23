@@ -4,7 +4,7 @@
  * @param args
  */
 export default (func, ...args) => {
-  let context = window;
+  let context = typeof window !== 'undefined' ? window : this;
   let fn;
   if (func instanceof Array) {
     [context, fn] = func;

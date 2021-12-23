@@ -64,8 +64,8 @@ class Saga {
       // 上来就调用一次listener的回调
       it({
         ...{
-          pathname: window.location.pathname,
-          search: window.location.search,
+          pathname: typeof window !== 'undefined' ? window.location.pathname : '',
+          search: typeof window !== 'undefined' ? window.location.search : '',
           query: parse(),
         },
         state: { ...self.store.state },
