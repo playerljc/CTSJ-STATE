@@ -1,7 +1,7 @@
 import { connect as createConnect } from '../../react';
 
 let sage;
-let Config;
+let Config = {};
 
 /**
  * ServiceRegister
@@ -21,6 +21,15 @@ export default {
    */
   initConfig(config) {
     Config = config;
+  },
+  /**
+   * addConfig
+   * @description - 添加一个服务注册
+   * @param {string} key
+   * @param {object} config
+   */
+  addConfig(key, config) {
+    Config[key] = config;
   },
   /**
    * setSage - 设置Sage实例
@@ -185,7 +194,6 @@ export default {
 
     return model;
   },
-
   /**
    * 加入自动清除的connect
    * @param serviceNames
